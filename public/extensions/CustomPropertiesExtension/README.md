@@ -1,6 +1,6 @@
 # Custom Properties Extension
 
-[Demo](https://forge-extensions.autodesk.io/?extension=CustomPropertiesExtension)
+[Demo](https://aps-extensions.autodesk.io/?extension=CustomPropertiesExtension)
 
 Extension showing custom properties in the Properties palette, based on their `dbId`.
 

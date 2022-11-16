@@ -1,8 +1,8 @@
 # AEC Grids
 
-[Demo](https://forge-extensions.autodesk.io/?extension=AecGridsExtensionn)
+[Demo](https://aps-extensions.autodesk.io/?extension=AecGridsExtensionn)
 
-A Forge Viewer extension for loading and rendering Revit Grids by AEC Model Data
+A APS Viewer extension for loading and rendering Revit Grids by AEC Model Data
 
 ![thumbnail](extension.gif)
 
@@ -10,7 +10,7 @@ A Forge Viewer extension for loading and rendering Revit Grids by AEC Model Data
 
 This extension works only for models that has AEC Model Data and have grids extracted inside its AEC Model Data.
 
-**Note.** Currently, only RVT files produced by Revit 2018 and newer versions will have AEC Model Data after translating by Forge Model Derivative API. See [Blog: Consume AEC Data which are from Model Derivative API](https://forge.autodesk.com/blog/consume-aec-data-which-are-model-derivative-api).
+**Note.** Currently, only RVT files produced by Revit 2018 and newer versions will have AEC Model Data after translating by APS Model Derivative API. See [Blog: Consume AEC Data which are from Model Derivative API](https://forge.autodesk.com/blog/consume-aec-data-which-are-model-derivative-api).
 
 ## Usage
 

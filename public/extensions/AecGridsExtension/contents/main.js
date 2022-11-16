@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by Forge Partner Development
+// Written by APS Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -350,12 +350,12 @@ class AecGridsPanel extends Autodesk.Viewing.UI.DockingPanel {
 }
 
 /**
- * A Forge Viewer extension for loading and rendering Revit Grids by AEC Model Data
+ * APS Viewer extension for loading and rendering Revit Grids by AEC Model Data
  * @class
  */
 class AecGridsExtension extends Autodesk.Viewing.Extension {
     /**
-     * @param {Viewer3D} viewer The Forge Viewer instance
+     * @param {Viewer3D} viewer The APS Viewer instance
      * @param {Object} options The extension options
      * @param {function} [options.onFailureCallback=(error, errorMessage) => { console.warn(`[${error.name}]: ${error.message}`); }] A failure callback that will be called when this model doesn't have AEC Model Data or grids data. By default, it will show warning message in the console.
      * @param {boolean} [options.autoUnloadOnNoAecModelData=true] If false, AecGridsExtension won't be unloaded when this model doesn't have AEC Model Data or grids data.

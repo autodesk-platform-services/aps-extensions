@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Forge Extensions</title>
+  <title>APS Extensions</title>
   <meta charset="utf-8" />
   <link rel="shortcut icon" href="https://github.com/Autodesk-Forge/learn.forge.viewmodels/raw/master/img/favicon.ico">
   <!-- Common packages: jQuery, Bootstrap, jsTree -->
@@ -13,15 +13,15 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default/style.min.css" />
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/themes/default-dark/style.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
-  <!-- Autodesk Forge Viewer files -->
+  <!-- APS Viewer files -->
   <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.min.css" type="text/css">
   <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.min.js"></script>
   <!-- this project files -->
   <link rel="stylesheet" type="text/css" href="css/w2ui-1.4.min.css" />
   <link href="css/main.css" rel="stylesheet" />
   <link href="extensions/extensionloader.css" rel="stylesheet" />
-  <script src="js/ForgeTree.js"></script>
-  <script src="js/ForgeViewer.js"></script>
+  <script src="js/ApsTree.js"></script>
+  <script src="js/ApsViewer.js"></script>
   <script src="/extensions/extensionloader.js"></script>
   <!-- Extension Dependencies -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBV72JOytVAAXlvey3kGB-XCu4S5XUxOs" type="text/javascript"></script>
@@ -34,14 +34,14 @@
       <ul class="nav navbar-nav left">
         <li>
           <a href="http://developer.autodesk.com" target="_blank">
-            <img alt="Autodesk Forge" src="//developer.static.autodesk.com/images/logo_forge-2-line.png" height="20">
+            <img alt="Autodesk Platform Services" src="//developer.static.autodesk.com/images/logo_forge-2-line.png" height="20">
           </a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <a href="https://github.com/autodesk-forge/forge-extensions" target="_blank">
-            <img alt="Autodesk Forge" src="/img/GitHub_Logo.png" height="25">
+          <a href="https://github.com/autodesk-platform-services/aps-extensions" target="_blank">
+            <img alt="Autodesk Platform Services" src="/img/GitHub_Logo.png" height="25">
           </a>
         </li>
       </ul>
@@ -66,7 +66,7 @@
       </div>
       <div class="col-sm-8 fill nopadding">
         <div class="tobegin"><i class="fas fa-arrow-left"></i>&nbsp;&nbsp;Select a model to load viewer and extensions</div>
-        <div id="forgeViewer"></div>
+        <div id="apsViewer"></div>
       </div>
       <div class="col-sm-2 fill right_panel">
 
@@ -110,7 +110,7 @@
           the object and select "Translate". Note: Technically your bucket name is required to be globally unique across
           the entire platform - to keep things simple with this tutorial your client ID will be prepended by default to
           your bucket name and in turn masked by the UI so you only have to make sure your bucket name is unique within
-          your current Forge app.
+          your current APS app.
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

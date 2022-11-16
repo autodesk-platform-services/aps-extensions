@@ -1,8 +1,8 @@
 # NestedViewerExtension
 
-[Demo](https://forge-extensions.autodesk.io/?extension=NestedViewerExtension)
+[Demo](https://aps-extensions.autodesk.io/?extension=NestedViewerExtension)
 
-Forge Viewer extension showing viewables related to the currently loaded model in another instance of the viewer.
+APS Viewer extension showing viewables related to the currently loaded model in another instance of the viewer.
 
 ![thumbnail](extension.gif)
 
