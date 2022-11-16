@@ -1,6 +1,6 @@
 # Draw Tool Extension
 
-[Demo](https://forge-extensions.autodesk.io/?extension=DrawToolExtension)
+[Demo](https://aps-extensions.autodesk.io/?extension=DrawToolExtension)
 
 A simple tool that will allow us to draw boxes and spheres. Please use the Draw Tool in only full screen mode.
 

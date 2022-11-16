@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by Forge Partner Development
+// Written by APS Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -34,13 +34,13 @@ router.use(async (req, res, next) => {
     next();
 });
 
-// GET /api/forge/oss/buckets - expects a query param 'id'; if the param is '#' or empty,
+// GET /api/aps/oss/buckets - expects a query param 'id'; if the param is '#' or empty,
 // returns a JSON with list of buckets, otherwise returns a JSON with list of objects in bucket with given name.
 router.get('/buckets', async (req, res, next) => {
     const bucket_name = req.query.id;
     if (!bucket_name || bucket_name === '#') {
         try {
-            // Retrieve buckets from Forge using the [BucketsApi](https://github.com/Autodesk-Forge/forge-api-nodejs-client/blob/master/docs/BucketsApi.md#getBuckets)
+            // Retrieve buckets from APS using the [BucketsApi](https://github.com/Autodesk-Forge/forge-api-nodejs-client/blob/master/docs/BucketsApi.md#getBuckets)
             const buckets = await new BucketsApi().getBuckets({ limit: 64 }, req.oauth_client, req.oauth_token);
             res.json(buckets.body.items.map((bucket) => {
                 return {
@@ -56,7 +56,7 @@ router.get('/buckets', async (req, res, next) => {
         }
     } else {
         try {
-            // Retrieve objects from Forge using the [ObjectsApi](https://github.com/Autodesk-Forge/forge-api-nodejs-client/blob/master/docs/ObjectsApi.md#getObjects)
+            // Retrieve objects from APS using the [ObjectsApi](https://github.com/Autodesk-Forge/forge-api-nodejs-client/blob/master/docs/ObjectsApi.md#getObjects)
             const objects = await new ObjectsApi().getObjects(bucket_name, {}, req.oauth_client, req.oauth_token);
             res.json(objects.body.items.map((object) => {
                 return {

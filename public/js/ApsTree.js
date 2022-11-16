@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by Forge Partner Development
+// Written by APS Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -42,7 +42,7 @@ $(document).ready(function () {
         formData.append('bucketKey', node.id);
 
         $.ajax({
-          url: '/api/forge/oss/upload',
+          url: '/api/aps/oss/upload',
           data: formData,
           processData: false,
           contentType: false,
@@ -61,7 +61,7 @@ function createNewBucket() {
   var bucketKey = $('#newBucketKey').val();
   var policyKey = $('#newBucketPolicyKey').val();
   jQuery.post({
-    url: '/api/forge/oss/buckets',
+    url: '/api/aps/oss/buckets',
     contentType: 'application/json',
     data: JSON.stringify({ 'bucketKey': bucketKey, 'policyKey': policyKey }),
     success: function (res) {
@@ -81,7 +81,7 @@ function prepareAppBucketTree() {
     'core': {
       'themes': { "icons": true },
       'data': {
-        "url": '/api/forge/oss/buckets',
+        "url": '/api/aps/oss/buckets',
         "dataType": "json",
         'multiple': false,
         "data": function (node) {
@@ -109,23 +109,23 @@ function prepareAppBucketTree() {
     $('#appBuckets').jstree('open_all');    
   }).bind("activate_node.jstree", function (evt, data) {
     if (data != null && data.node != null && data.node.type == 'object') {
-      $("#forgeViewer").empty();
+      $("#apsViewer").empty();
       var urn = data.node.id;
       var filename = data.node.text
       document.getElementsByClassName('tobegin')[0].style.display = 'none';
-      getForgeToken(function (access_token) {
+      getApsToken(function (access_token) {
         jQuery.ajax({
           url: 'https://developer.api.autodesk.com/modelderivative/v2/designdata/' + urn + '/manifest',
           headers: { 'Authorization': 'Bearer ' + access_token },
           success: function (res) {
             if (res.progress === 'success' || res.progress === 'complete') launchViewer(urn,filename);
-            else $("#forgeViewer").html('The translation job still running: ' + res.progress + '. Please try again in a moment.');
+            else $("#apsViewer").html('The translation job still running: ' + res.progress + '. Please try again in a moment.');
           },
           error: function (err) {
             var msgButton = 'This file is not translated yet! ' +
               '<button class="btn btn-xs btn-info" onclick="translateObject()"><span class="glyphicon glyphicon-eye-open"></span> ' +
               'Start translation</button>'
-            $("#forgeViewer").html(msgButton);
+            $("#apsViewer").html(msgButton);
           }
         });
       })
@@ -185,16 +185,16 @@ function uploadFile() {
 }
 
 function translateObject(node) {
-  $("#forgeViewer").empty();
+  $("#apsViewer").empty();
   if (node == null) node = $('#appBuckets').jstree(true).get_selected(true)[0];
   var bucketKey = node.parents[0];
   var objectKey = node.id;
   jQuery.post({
-    url: '/api/forge/modelderivative/jobs',
+    url: '/api/aps/modelderivative/jobs',
     contentType: 'application/json',
     data: JSON.stringify({ 'bucketKey': bucketKey, 'objectName': objectKey }),
     success: function (res) {
-      $("#forgeViewer").html('Translation started! Please try again in a moment.');
+      $("#apsViewer").html('Translation started! Please try again in a moment.');
     },
   });
 }

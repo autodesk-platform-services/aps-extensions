@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by Forge Partner Development
+// Written by APS Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -18,7 +18,7 @@
 
 if (!window.XLSX) alert('Sheet JS is required for this sample');
 
-let ForgeXLS = {
+let ApsXLS = {
 
   downloadXLSX: function (fileName, status) {
 
@@ -33,7 +33,7 @@ let ForgeXLS = {
       let wb = new Workbook();
       for (const [name, table] of Object.entries(tables)){
         if (name.indexOf('<')==-1) { // skip tables starting with <
-          let ws = ForgeXLS.sheetFromTable(table);
+          let ws = ApsXLS.sheetFromTable(table);
           wb.SheetNames.push(name);
           wb.Sheets[name] = ws;
         }
@@ -112,7 +112,7 @@ let ForgeXLS = {
     let data = new ModelData(this);
     data.init(async function () {
         let hierarchy = data._modelData.Category;
-        let t = await ForgeXLS.prepareRawData(hierarchy);
+        let t = await ApsXLS.prepareRawData(hierarchy);
         callback(t);
     });
   },

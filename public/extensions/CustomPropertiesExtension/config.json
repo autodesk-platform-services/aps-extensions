@@ -24,7 +24,7 @@
         "cssfiles":[],
         "jsfiles":["main.js"]
     },
-    "bloglink":"https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions/CustomPropertiesExtension",
+    "bloglink":"https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/CustomPropertiesExtension",
     "includeinlist":"true",
     "gif": "extension.gif",
     "externaldependencies":[]    

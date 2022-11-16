@@ -1,6 +1,6 @@
 # Camera Rotation
 
-[Demo](https://forge-extensions.autodesk.io/?extension=CameraRotation)
+[Demo](https://aps-extensions.autodesk.io/?extension=CameraRotation)
 
 This extension can be used for model demo purpose, it just rotates the building or the model for look around.
 

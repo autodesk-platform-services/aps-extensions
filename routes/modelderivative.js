@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by Forge Partner Development
+// Written by APS Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -37,7 +37,7 @@ router.use(async (req, res, next) => {
     next();
 });
 
-// POST /api/forge/modelderivative/jobs - submits a new translation job for given object URN.
+// POST /api/aps/modelderivative/jobs - submits a new translation job for given object URN.
 // Request body must be a valid JSON in the form of { "objectName": "<translated-object-urn>" }.
 router.post('/jobs', async (req, res, next) => {
     let job = new JobPayload();

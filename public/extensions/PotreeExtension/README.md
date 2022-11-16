@@ -1,19 +1,19 @@
 # PotreeExtension
 
-[Demo](https://forge-extensions.autodesk.io/?extension=PotreeExtension)
+[Demo](https://aps-extensions.autodesk.io/?extension=PotreeExtension)
 
 ![thumbnail](extension.gif)
 
-Forge Viewer extension for loading and rendering Potree models.
+APS Viewer extension for loading and rendering Potree models.
 
-The extension uses [potree-core](https://github.com/tentone/potree-core) library that has been back-ported to three.js version 71 (the one used by the Forge Viewer). The experimental back-ported version of the library can be found in https://github.com/petrbroz/potree-core/tree/experiment/three71.
+The extension uses [potree-core](https://github.com/tentone/potree-core) library that has been back-ported to three.js version 71 (the one used by the APS Viewer). The experimental back-ported version of the library can be found in https://github.com/petrbroz/potree-core/tree/experiment/three71.
 
 Apart from the library itself (available as either _potree.js_, _potree.min.js_, or _potree.module.js_), this folder also includes various decoders in the _workers_ subfolder, and a sample dataset from https://github.com/tentone/potree-core.
 
 ## Usage
 
-- copy this _contents_ folder to your Forge application (the _data_ subfolder is not necessary)
-- include the Potree library and this extension in your HTML, after the Forge Viewer script:
+- copy this _contents_ folder to your APS application (the _data_ subfolder is not necessary)
+- include the Potree library and this extension in your HTML, after the APS Viewer script:
 
 ```html
 <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.min.js"></script>

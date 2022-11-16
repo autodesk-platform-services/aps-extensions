@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by Forge Partner Development
+// Written by APS Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -21,7 +21,7 @@ const { AuthClientTwoLegged } = require('forge-apis');
 const config = require('../../config');
 
 /**
- * Initializes a Forge client for 2-legged authentication.
+ * Initializes a APS client for 2-legged authentication.
  * @param {string[]} scopes List of resource access scopes.
  * @returns {AuthClientTwoLegged} 2-legged authentication client.
  */

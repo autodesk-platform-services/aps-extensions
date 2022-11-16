@@ -1,8 +1,8 @@
 # Google Maps Locator
 
-[Demo](https://forge-extensions.autodesk.io/?extension=GoogleMapsLocator)
+[Demo](https://aps-extensions.autodesk.io/?extension=GoogleMapsLocator)
 
-Forge Viewer extension to show location of model on google maps.
+APS Viewer extension to show location of model on google maps.
 
 ![thumbnail](extension.gif)
 

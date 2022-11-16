@@ -1,6 +1,6 @@
 # Transform
 
-[Demo](https://forge-extensions.autodesk.io/?extension=TransformationExtension)
+[Demo](https://aps-extensions.autodesk.io/?extension=TransformationExtension)
 
 Allows moving elements on the model.
 

@@ -1,4 +1,4 @@
-# forge-extensions
+# aps-extensions
 
 [![Node.js](https://img.shields.io/badge/Node.js-4.4.3-blue.svg)](https://nodejs.org/)
 [![npm](https://img.shields.io/badge/npm-2.15.1-blue.svg)](https://www.npmjs.com/)
@@ -27,7 +27,7 @@ This sample is a collection of extensions ready to be reused. Just add reference
 
 Extensions were created using a [Basic Skeleton](public/extensions/BasicSkeleton).
 
-This sample is based on the [Learn Forge](http://learnforge.autodesk.io) tutorials in the section *View modelss*.
+This sample is based on the [Learn APS](http://learnforge.autodesk.io) tutorials in the section *View modelss*.
 
 ## Thumbnail
 
@@ -37,11 +37,11 @@ This sample is based on the [Learn Forge](http://learnforge.autodesk.io) tutoria
 
 Extensions are dynamically loaded and unloaded for testing on the live version.
 
-[forge-extensions.autodesk.io](https://forge-extensions.autodesk.io)
+[aps-extensions.autodesk.io](https://aps-extensions.autodesk.io)
 
 # Setup
 
-To use this sample, you will need Autodesk developer credentials. Visit the [Forge Developer Portal](https://developer.autodesk.com), sign up for an account, then [create an app](https://developer.autodesk.com/myapps/create). For this new app, use `http://localhost:3000/api/forge/callback/oauth` as the Callback URL, although it is not used on a 2-legged flow. Finally, take note of the **Client ID** and **Client Secret**.
+To use this sample, you will need Autodesk developer credentials. Visit the [APS Developer Portal](https://developer.autodesk.com), sign up for an account, then [create an app](https://developer.autodesk.com/myapps/create). For this new app, use `http://localhost:3000/api/aps/callback/oauth` as the Callback URL, although it is not used on a 2-legged flow. Finally, take note of the **Client ID** and **Client Secret**.
 
 ## Run locally
 
@@ -49,22 +49,22 @@ Install [NodeJS](https://nodejs.org).
 
 Clone this project or download it. It's recommended to install [GitHub Desktop](https://desktop.github.com/). To clone it via command line, use the following (**Terminal** on MacOSX/Linux, **Git Shell** on Windows):
 
-    git clone https://github.com/autodesk-forge/forge-extensions.git
+    git clone https://github.com/autodesk-platform-services/aps-extensions.git
 
 To run it, install the required packages, set the enviroment variables with your client ID & Secret and finally start it. Via command line, navigate to the folder where this repository was cloned to and use the following commands:
 
 Mac OSX/Linux (Terminal)
 
     npm install
-    export FORGE_CLIENT_ID=<<YOUR CLIENT ID FROM DEVELOPER PORTAL>>
-    export FORGE_CLIENT_SECRET=<<YOUR CLIENT SECRET>>
+    export APS_CLIENT_ID=<<YOUR CLIENT ID FROM DEVELOPER PORTAL>>
+    export APS_CLIENT_SECRET=<<YOUR CLIENT SECRET>>
     npm start
 
 Windows (use **Node.js command line** from the Start menu)
 
     npm install
-    set FORGE_CLIENT_ID=<<YOUR CLIENT ID FROM DEVELOPER PORTAL>>
-    set FORGE_CLIENT_SECRET=<<YOUR CLIENT SECRET>>
+    set APS_CLIENT_ID=<<YOUR CLIENT ID FROM DEVELOPER PORTAL>>
+    set APS_CLIENT_SECRET=<<YOUR CLIENT SECRET>>
     npm start
 
 Open the browser: [http://localhost:3000](http://localhost:3000).
@@ -83,7 +83,7 @@ ExtensionName[Folder]
         |     |->assets[folder]
         |->config.json
 </pre>        
-Refer the [BasicSkeleton Extension](https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions/BasicSkeleton) for boilerplate code.
+Refer the [BasicSkeleton Extension](https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/BasicSkeleton) for boilerplate code.
 
 2) Each extension folder should be self-contained code, so that it's easily shareable between projects.
 Extension[Folder]/config.json is meant for keeping the config of an extension and for sharing.
@@ -105,7 +105,7 @@ Extension config schema:
     "includeinlist":"true or false"
 }
 </pre>
-Example: [IconMarkupExtension config.json](https://github.com/autodesk-forge/forge-extensions/blob/master/public/extensions/IconMarkupExtension/config.json)
+Example: [IconMarkupExtension config.json](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/config.json)
 
 > Note: If your extension relies on event Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT to load, in load function check if the data is already loaded, if not only then add the event listener, below code shows the structure.
 <pre>
@@ -128,22 +128,22 @@ class MyExtension extends Autodesk.Viewing.Extension {
     ...
 }
 </pre>
-Example: [IconMarkupExtension load function](https://github.com/autodesk-forge/forge-extensions/blob/master/public/extensions/IconMarkupExtension/contents/main.js#L26)
+Example: [IconMarkupExtension load function](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/contents/main.js#L26)
 
 > Note: After the new extension is added, please restart the server.
 
-# Understanding extensionloader and using it in forge app
+# Understanding extensionloader and using it in aps app
 
-The way loose coupling between extensions and forge app is achived is with custom event, if you want to use extensionloader in your forge app, follow the three steps:
+The way loose coupling between extensions and aps app is achived is with custom event, if you want to use extensionloader in your aps app, follow the three steps:
 
-1) Copy paste the [extensions](https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions) in public folder of your app or in the folder where the index file resides. 
+1) Copy paste the [extensions](https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions) in public folder of your app or in the folder where the index file resides. 
 
 2) Include below script in index.html file
 <pre>
 <script src="/extensions/extensionloader.js"></script>
 </pre>
 
-3) Here's the linking part between the app and the extensionloader, in viewer [onDocumentLoadSuccess](https://github.com/autodesk-forge/forge-extensions/blob/master/public/js/ForgeViewer.js#L35) function, emit an event to inform the extensionloader that viewer has loaded the model with the below [code](https://github.com/autodesk-forge/forge-extensions/blob/master/public/js/ForgeViewer.js#L39):
+3) Here's the linking part between the app and the extensionloader, in viewer [onDocumentLoadSuccess](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/js/ApsViewer.js#L35) function, emit an event to inform the extensionloader that viewer has loaded the model with the below [code](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/js/ApsViewer.js#L39):
 <pre>
 var ViewerInstance = new CustomEvent("viewerinstance", {detail: {viewer: viewer}});      
 document.dispatchEvent(ViewerInstance);
@@ -173,7 +173,7 @@ To unload extension:
 
 ## Packages used
 
-The [Autodesk Forge](https://www.npmjs.com/package/forge-apis) packages are included by default. Some other non-Autodesk packages are used, including [express](https://www.npmjs.com/package/express) and [multer](https://www.npmjs.com/package/multer) for upload.
+The [Autodesk Platform Services](https://www.npmjs.com/package/forge-apis) packages are included by default. Some other non-Autodesk packages are used, including [express](https://www.npmjs.com/package/express) and [multer](https://www.npmjs.com/package/multer) for upload.
 
 # Tips & tricks
 
@@ -200,7 +200,7 @@ Please see the [LICENSE](LICENSE) file for full details.
 
 ## Written by
 
-The [Forge Advocates](http://forge.autodesk.com) team:
+The [APS Advocates](http://forge.autodesk.com) team:
 
 * Varun Patil [@VarunPatil578](https://twitter.com/VarunPatil578)
 * Petr Broz [@ipetrbroz](https://twitter.com/ipetrbroz)
