@@ -26,7 +26,7 @@ This sample is a collection of extensions ready to be reused. Just add reference
 
 Extensions were created using a [Basic Skeleton](public/extensions/BasicSkeleton).
 
-This sample is based on the [Learn APS](http://learnforge.autodesk.io) tutorials in the section *View modelss*.
+This sample is based on the [Learn Aps](http://learnforge.autodesk.io) tutorials in the section *View modelss*.
 
 ## Thumbnail
 
