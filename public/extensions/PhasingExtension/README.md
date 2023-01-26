@@ -18,7 +18,9 @@ Include the JS file on your page. This CDN is compatible with the lastest Viewer
 
 Everything is inside `main.js` file (extension and panel).
 in panel class there's also the reference for the external libraries used by this extension:
+
 [Sweetalert2](https://sweetalert2.github.io)
+
 [Frappe Gantt](https://frappe.io/gantt)
 
 ## How it works
