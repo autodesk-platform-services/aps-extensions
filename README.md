@@ -24,6 +24,7 @@ This sample is a collection of extensions ready to be reused. Just add reference
 6. [Draw Tool Extension](public/extensions/DrawToolExtension)
 7. [Custom Properties Extension](public/extensions/CustomPropertiesExtension)
 8. [XLS Extension](public/extensions/XLSExtension)
+8. [Edit2D Extension](public/extensions/Edit2dExtension)
 
 Extensions were created using a [Basic Skeleton](public/extensions/BasicSkeleton).
 
