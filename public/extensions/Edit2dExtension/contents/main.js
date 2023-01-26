@@ -19,7 +19,7 @@
 // *******************************************
 // Edit2D Extension
 // *******************************************
-class Edit2DExtension extends Autodesk.Viewing.Extension {
+class Edit2dExtension extends Autodesk.Viewing.Extension {
   constructor(viewer, options) {
     super(viewer, options);
   }
@@ -43,9 +43,9 @@ class Edit2DExtension extends Autodesk.Viewing.Extension {
 
   onToolbarCreated() {
     // Create a new toolbar group if it doesn't exist
-    this._group = this.viewer.toolbar.getControl('Edit2DExtensionsToolbar');
+    this._group = this.viewer.toolbar.getControl('Edit2dExtensionsToolbar');
     if (!this._group) {
-        this._group = new Autodesk.Viewing.UI.ControlGroup('Edit2DExtensionsToolbar');
+        this._group = new Autodesk.Viewing.UI.ControlGroup('Edit2dExtensionsToolbar');
         this.viewer.toolbar.addControl(this._group);
     }
 
@@ -113,4 +113,4 @@ class Edit2DExtension extends Autodesk.Viewing.Extension {
   }
 }
 
-Autodesk.Viewing.theExtensionManager.registerExtension('Edit2DExtension', Edit2DExtension);
+Autodesk.Viewing.theExtensionManager.registerExtension('Edit2dExtension', Edit2dExtension);

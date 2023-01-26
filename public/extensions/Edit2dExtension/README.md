@@ -1,6 +1,6 @@
 # Edit2D
 
-[Demo](https://aps-extensions.autodesk.io/?extension=Edit2DExtension)
+[Demo](https://aps-extensions.autodesk.io/?extension=Edit2dExtension)
 
 Shows some Edit2D extension functionality.
 
@@ -21,7 +21,7 @@ Include the CSS & JS file on your page. This CDN is compatible with the lastest 
 After Viewer is ready, preferably inside `onDocumentLoadSuccess`, load the extension
 
 ```javascript
-viewer.loadExtension("Edit2DExtension")
+viewer.loadExtension("Edit2dExtension")
 ```
 
 ## How it works
