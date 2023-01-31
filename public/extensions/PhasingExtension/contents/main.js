@@ -353,7 +353,7 @@ class PhasingPanel extends Autodesk.Viewing.UI.DockingPanel {
         'accept': '.csv',
         'aria-label': 'Upload your csv for configuration'
       },
-      footer: '<a href="https://gist.github.com/JoaoMartins-callmeJohn/488b4173c384ee12fc338dac02588385" target="_blank">GRAB A SAMPLE CSV HERE!</a>',
+      footer: '<a href="https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/PhasingExtension/assets/sample.csv" target="_blank">GRAB A SAMPLE CSV HERE!</a>',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
