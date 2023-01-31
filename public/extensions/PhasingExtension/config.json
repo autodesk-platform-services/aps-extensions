@@ -1,0 +1,17 @@
+{
+  "name": "PhasingExtension",
+  "displayname": "Phasing Extension",
+  "description": "APS extension to generate Gantt chart connected with objects from the model",
+  "options": {},
+  "viewerversion": "7.*",
+  "loadonstartup": "false",
+  "filestoload": {
+    "cssfiles": [],
+    "jsfiles": [
+      "main.js"
+    ]
+  },
+  "bloglink": "TBD",
+  "includeinlist": "true",
+  "gif": "extension.gif"
+}
