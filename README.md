@@ -25,6 +25,7 @@ This sample is a collection of extensions ready to be reused. Just add reference
 7. [Custom Properties Extension](public/extensions/CustomPropertiesExtension)
 8. [XLS Extension](public/extensions/XLSExtension)
 8. [Edit2D Extension](public/extensions/Edit2dExtension)
+9. [Phasing Extension](public/extensions/PhasingExtension)
 
 Extensions were created using a [Basic Skeleton](public/extensions/BasicSkeleton).
 
