@@ -217,7 +217,7 @@
         {
             "name": "PhasingExtension",
             "displayname": "Phasing Extension",
-            "description": "APS extension to generate Gantt chart connected with objects from the model",
+            "description": "Viewer extension to generate Gantt chart connected with objects from the model",
             "options": {},
             "viewerversion": "7.*",
             "loadonstartup": "false",
