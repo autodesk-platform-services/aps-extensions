@@ -1,0 +1,6 @@
+ID,NAME,START,END,PROGRESS,Type Name,DEPENDENCIES
+123,Basement Floor,2022-12-10,2023-01-04,100,Generic - 12",
+124,Wood Floor,2023-01-12,2023-01-22,100,Wood Floor - 12",123
+125,Concrete Walls,2023-01-22,2023-02-22,100,Cast Concrete Wall 12",124
+126,Generic Walls - 300,2023-02-25,2023-03-13,100,Generic - 8",125
+127,Roof,2023-03-22,2023-04-05,50,Wood Frame - 10",126
