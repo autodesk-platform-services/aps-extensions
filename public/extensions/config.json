@@ -20,7 +20,7 @@
         {
             "name": "CameraRotation",
             "displayname": "Camera Rotation",
-            "description": "Rotates the model continously until stopped, can be used for demoing a large model.",
+            "description": "Rotates the model continously untill stopped, can be used for demoing a large model.",
             "options": {},
             "loadonstartup": "false",
             "filestoload": {
@@ -217,7 +217,7 @@
         {
             "name": "PhasingExtension",
             "displayname": "Phasing Extension",
-            "description": "Viewer extension to generate Gantt chart connected with objects from the model",
+            "description": "APS extension to generate Gantt chart connected with objects from the model",
             "options": {},
             "viewerversion": "7.*",
             "loadonstartup": "false",
@@ -261,6 +261,32 @@
             "gif": "extension.gif",
             "includeinlist": "true",
             "bloglink": ""
+        },
+        {
+            "name": "RoomLocatorExtension",
+            "displayname": "Room Locator",
+            "description": "A viewer extension for finding the room where the selected object is located.",
+            "options": {
+                "alertOnDefaultFailure": true,
+                "autoUnloadOnNoAecModelData": true
+            },
+            "editoptions": "true",
+            "viewerversion": "7.*",
+            "loadonstartup": "false",
+            "filestoload": {
+                "cssfiles": [],
+                "jsfiles": [
+                    "main.js"
+                ]
+            },
+            "bloglink": "",
+            "includeinlist": "true",
+            "externaldependencies": [
+                {
+                    "type": "js",
+                    "link": "https://cdn.jsdelivr.net/gh/Wilt/ThreeCSG@develop/ThreeCSG.js"
+                }
+            ]
         },
         {
             "name": "TabSelectionExtension",
