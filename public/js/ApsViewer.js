@@ -1,4 +1,4 @@
-﻿/////////////////////////////////////////////////////////////////////
+﻿  /////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
 // Written by APS Partner Development
 //
@@ -29,7 +29,12 @@ function launchViewer(urn, name) {
 
   Autodesk.Viewing.Initializer(options, () => {
     viewer = new Autodesk.Viewing.GuiViewer3D(document.getElementById('apsViewer'));
-    viewer.start();
+    viewer.start(null, null, null, null, {
+      webglInitParams: {
+          useWebGL2: false  // It's for Potree extension. If this is causing performance issue or any other problem, just use viewer.start();
+      }
+    });
+    // viewer.start();
     var documentId = 'urn:' + urn;
     Autodesk.Viewing.Document.load(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
   });

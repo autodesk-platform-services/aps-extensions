@@ -196,7 +196,7 @@
 
 				for(var key in current.children)
 				{
-					if(current.children.hasOwnProperty(key))
+					if(current.children.hasOwnProperty(key) && key !== '__proto__')	// security fix
 					{
 						var child = current.children[key];
 						if(child.loaded)
