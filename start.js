@@ -19,6 +19,7 @@
 const path = require('path');
 const express = require('express');
 const fs = require('fs');
+const { PORT } = require('./config.js');
 
 let masterconfigpath = './public/extensions/config.json';
 let extensionsconfig = require(masterconfigpath);
@@ -35,21 +36,8 @@ fs.writeFileSync(masterconfigpath, JSON.stringify(extensionsconfig), function(er
     if (err) throw err;
 });
 
-const PORT = process.env.PORT || 3000;
-const config = require('./config');
-if (config.credentials.client_id == null || config.credentials.client_secret == null) {
-    console.error('Missing APS_CLIENT_ID or APS_CLIENT_SECRET env. variables.');
-    return;
-}
-
 let app = express();
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json({ limit: '50mb' }));
-app.use('/api/aps/oauth', require('./routes/oauth'));
-app.use('/api/aps/oss', require('./routes/oss'));
-app.use('/api/aps/modelderivative', require('./routes/modelderivative'));
-app.use((err, req, res, next) => {
-    console.error(err);
-    res.status(err.statusCode).json(err);
-});
-app.listen(PORT, () => { console.log(`Server listening on port ${PORT}`); });
+app.use(express.static('public'));
+app.use(require('./routes/auth.js'));
+app.use(require('./routes/models.js'));
+app.listen(PORT, function () { console.log(`Server listening on port ${PORT}...`); });

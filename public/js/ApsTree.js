@@ -42,7 +42,7 @@ $(document).ready(function () {
         formData.append('bucketKey', node.id);
 
         $.ajax({
-          url: '/api/aps/oss/upload',
+          url: '/api/models/upload',
           data: formData,
           processData: false,
           contentType: false,
@@ -57,31 +57,13 @@ $(document).ready(function () {
   });
 });
 
-function createNewBucket() {
-  var bucketKey = $('#newBucketKey').val();
-  var policyKey = $('#newBucketPolicyKey').val();
-  jQuery.post({
-    url: '/api/aps/oss/buckets',
-    contentType: 'application/json',
-    data: JSON.stringify({ 'bucketKey': bucketKey, 'policyKey': policyKey }),
-    success: function (res) {
-      $('#appBuckets').jstree(true).refresh();
-      $('#createBucketModal').modal('toggle');
-    },
-    error: function (err) {
-      if (err.status == 409)
-        alert('Bucket already exists - 409: Duplicated')
-      console.log(err);
-    }
-  });
-}
 var extensionloaded = false;
 function prepareAppBucketTree() {
   $('#appBuckets').jstree({
     'core': {
       'themes': { "icons": true },
       'data': {
-        "url": '/api/aps/oss/buckets',
+        "url": '/api/models/buckets',
         "dataType": "json",
         'multiple': false,
         "data": function (node) {
@@ -122,9 +104,7 @@ function prepareAppBucketTree() {
             else $("#apsViewer").html('The translation job still running: ' + res.progress + '. Please try again in a moment.');
           },
           error: function (err) {
-            var msgButton = 'This file is not translated yet! ' +
-              '<button class="btn btn-xs btn-info" onclick="translateObject()"><span class="glyphicon glyphicon-eye-open"></span> ' +
-              'Start translation</button>'
+            var msgButton = 'This file is not translated yet!'
             $("#apsViewer").html(msgButton);
           }
         });
@@ -166,7 +146,7 @@ function autodeskCustomMenu(autodeskNode) {
     case "object":
       items = {
         translateFile: {
-          label: "Translate",
+          label: "Check status",
           action: function () {
             var treeNode = $('#appBuckets').jstree(true).get_selected(true)[0];            
             translateObject(treeNode);
@@ -182,19 +162,4 @@ function autodeskCustomMenu(autodeskNode) {
 
 function uploadFile() {
   $('#hiddenUploadField').click();
-}
-
-function translateObject(node) {
-  $("#apsViewer").empty();
-  if (node == null) node = $('#appBuckets').jstree(true).get_selected(true)[0];
-  var bucketKey = node.parents[0];
-  var objectKey = node.id;
-  jQuery.post({
-    url: '/api/aps/modelderivative/jobs',
-    contentType: 'application/json',
-    data: JSON.stringify({ 'bucketKey': bucketKey, 'objectName': objectKey }),
-    success: function (res) {
-      $("#apsViewer").html('Translation started! Please try again in a moment.');
-    },
-  });
 }

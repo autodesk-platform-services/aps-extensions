@@ -4,7 +4,7 @@
 <head>
   <title>APS Extensions</title>
   <meta charset="utf-8" />
-  <link rel="shortcut icon" href="https://github.com/Autodesk-Forge/learn.forge.viewmodels/raw/master/img/favicon.ico">
+  <link rel="shortcut icon" href="https://cdn.autodesk.io/favicon.ico">
   <!-- Common packages: jQuery, Bootstrap, jsTree -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -64,9 +64,6 @@
             Sample Models
             <span id="refreshBuckets" class="glyphicon glyphicon-refresh" style="cursor: pointer"></span>
           </div>
-          <!-- <button class="btn btn-xs btn-info" style="float: right" id="showFormCreateBucket" data-toggle="modal" data-target="#createBucketModal">
-            <span class="glyphicon glyphicon-folder-close"></span> New bucket
-          </button> -->
           <div id="appBuckets">
             tree here
           </div>
@@ -102,32 +99,7 @@
   <form id="uploadFile" method='post' enctype="multipart/form-data">
     <input id="hiddenUploadField" type="file" name="theFile" style="visibility:hidden" />
   </form>
-  <!-- Modal Create Bucket -->
-  <div class="modal fade" id="createBucketModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel">Create new bucket</h4>
-        </div>
-        <div class="modal-body">
-          <input type="text" id="newBucketKey" class="form-control"> For demonstration purposes, objects (files)
-          are NOT automatically translated. After you upload, right click on
-          the object and select "Translate". Note: Technically your bucket name is required to be globally unique across
-          the entire platform - to keep things simple with this tutorial your client ID will be prepended by default to
-          your bucket name and in turn masked by the UI so you only have to make sure your bucket name is unique within
-          your current APS app.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="createNewBucket">Go ahead, create the bucket</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  
   <!-- Modal Edit Config Bucket -->
   <div class="modal fade" id="editConfigModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">

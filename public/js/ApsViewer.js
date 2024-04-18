@@ -61,7 +61,7 @@ function onDocumentLoadFailure(viewerErrorCode) {
 }
 
 function getApsToken(callback) {
-  fetch('/api/aps/oauth/token').then(res => {
+  fetch('/api/auth/token').then(res => {
     res.json().then(data => {
       callback(data.access_token, data.expires_in);
     });

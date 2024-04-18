@@ -17,20 +17,14 @@
 /////////////////////////////////////////////////////////////////////
 
 const express = require('express');
-
-const { getPublicToken } = require('./common/oauth');
+const { getPublicToken } = require('../services/aps.js');
 
 let router = express.Router();
 
-// GET /api/aps/oauth/token - generates a public access token (required by the APS viewer).
-router.get('/token', async (req, res, next) => {
+router.get('/api/auth/token', async function (req, res, next) {
     try {
-        const token = await getPublicToken();
-        res.json({
-            access_token: token.access_token,
-            expires_in: token.expires_in    
-        });
-    } catch(err) {
+        res.json(await getPublicToken());
+    } catch (err) {
         next(err);
     }
 });

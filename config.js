@@ -17,17 +17,15 @@
 /////////////////////////////////////////////////////////////////////
 
 // Autodesk Platform configuration
+let { APS_CLIENT_ID, APS_CLIENT_SECRET, PORT } = process.env;
+if (!APS_CLIENT_ID || !APS_CLIENT_SECRET) {
+    console.warn('Missing some of the environment variables.');
+    process.exit(1);
+}
+PORT = PORT || 3000;
+
 module.exports = {
-    // Set environment variables or hard-code here
-    credentials: {
-        client_id: process.env.APS_CLIENT_ID,
-        client_secret: process.env.APS_CLIENT_SECRET,
-        callback_url: process.env.APS_CALLBACK_URL
-    },
-    scopes: {
-        // Required scopes for the server-side application
-        internal: ['bucket:create', 'bucket:read', 'data:read', 'data:create', 'data:write'],
-        // Required scope for the client-side viewer
-        public: ['viewables:read']
-    }
+    APS_CLIENT_ID,
+    APS_CLIENT_SECRET,
+    PORT
 };
