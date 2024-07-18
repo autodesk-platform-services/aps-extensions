@@ -3,7 +3,7 @@
     "displayname": "Potree Point Clouds",
     "description": "Forge Viewer extension for loading and rendering Potree point clouds.",
     "options": {
-        "url": "/extensions/PotreeExtension/contents/data/lion_takanawa/cloud.js",
+        "url": "https://aps-extensions-sample-data.s3.us-west-2.amazonaws.com/PotreeExtension/lion_takanawa/cloud.js",
         "position": [0.0, 0.0, 0.0],
         "scale": [5.0, 5.0, 5.0]
     },
