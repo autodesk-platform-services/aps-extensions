@@ -190,14 +190,24 @@ Autodesk.ADN.Viewing.Extension.TransformTool =  function (viewer, options) {
         ///////////////////////////////////////////////////////////////////////////
         function getHitPoint(event) {
 
+			// Better to use pageX/pageY instead of clientX/clientY
+			// so that things work when the Viewer is scrolled up on the page
             var screenPoint = {
-                x: event.clientX,
-                y: event.clientY
+                x: event.pageX,
+                y: event.pageY
             };
 
             var n = normalize(screenPoint);
 
             var hitPoint = viewer.utilities.getHitPoint(n.x, n.y);
+
+			if (hitPoint) {
+				console.log(event);
+				// console.log(hitPoint);
+				// console.log(screenPoint);
+				// console.log(n);
+				// console.log(viewer.navigation.getScreenViewport());
+			}
 
             return hitPoint;
         }
