@@ -33,7 +33,7 @@ This sample is based on the [Learn APS](http://learnforge.autodesk.io) tutorials
 
 ## Thumbnail
 
-![thumbnail](/thumbnail.PNG)
+![thumbnail](/thumbnail.png)
 
 ## Live Demo
 
