@@ -19,6 +19,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 // TurnTable extension illustrating camera rotation around the model
 // by Denis Grigor, November 2018
+// modified by ahhhchuen Mar 2025
+// features enriched:
+//  - routine to clear scheduled animation frame when unload
+//  - use correct up axis as rotation axis, to suit models from: e.g. Revit, Inventor alike
+//  - turntable rotate around pivot instead of 0,0,0 to allow for user navigation during animation
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +33,7 @@ class TurnTableExtension extends Autodesk.Viewing.Extension {
         this.viewer = viewer;
         this._group = null;
         this._button = null;
+        this.requestId = null;
         this.customize = this.customize.bind(this);
     }
 
@@ -39,8 +45,16 @@ class TurnTableExtension extends Autodesk.Viewing.Extension {
         }        
         return true;
     }
+    
     unload() {
         console.log('TurnTableExtension is now unloaded!');
+        
+        // Clean the scheduled animation frame request, as a best practice
+        if (this.requestId) {
+            cancelAnimationFrame(this.requestId);
+            this.requestId = null;
+        }
+        
         // Clean our UI elements if we added any
         if (this._group) {
             this._group.removeControl(this._button);
@@ -68,19 +82,36 @@ class TurnTableExtension extends Autodesk.Viewing.Extension {
 
         let rotateCamera = () => {
             if (started) {
-                requestAnimationFrame(rotateCamera);
+                this.requestId = requestAnimationFrame(rotateCamera);
             }
 
             const nav = viewer.navigation;
+            const pos = nav.getPosition();
+            const piv = nav.getPivotPoint();
+            const tar = nav.getTarget();
             const up = nav.getCameraUpVector();
-            const axis = new THREE.Vector3(0, 0, 1);
+            // determine the 'up' axis from the loaded model to apply matrix transformation
+            const upAxis = nav.getWorldUpVector();
+            const axis = new THREE.Vector3();
+            if (upAxis.z == 1) {
+                axis.set(0, 0, 1);
+            } else if (upAxis.y == 1) {
+                axis.set(0, 1, 0);
+            } else {
+                axis.set(1, 0, 0);                
+            };   
             const speed = 10.0 * Math.PI / 180;
             const matrix = new THREE.Matrix4().makeRotationAxis(axis, speed * 0.1);
 
-            let pos = nav.getPosition();
-            pos.applyMatrix4(matrix);
+            // Rotate the camera position relative to the pivot
+            pos.sub(piv); // Move the camera position relative to the pivot to (0,0,0)
+            pos.applyMatrix4(matrix); // Apply the rotation
+            pos.add(piv); // Move the camera position back to its original reference system of pivot()
+            tar.sub(piv); // Move the target position relative to the pivot to (0,0,0)
+            tar.applyMatrix4(matrix); // Apply the rotation
+            tar.add(piv); // Move the target position back to its original reference system of pivot()     
             up.applyMatrix4(matrix);
-            nav.setView(pos, new THREE.Vector3(0, 0, 0));
+            nav.setView(pos, tar);
             nav.setCameraUpVector(up);
             var viewState = viewer.getState();
             // viewer.restoreState(viewState);
