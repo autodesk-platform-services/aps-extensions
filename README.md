@@ -27,9 +27,9 @@ This sample is a collection of extensions ready to be reused. Just add reference
 8. [Edit2D Extension](public/extensions/Edit2dExtension)
 9. [Phasing Extension](public/extensions/PhasingExtension)
 
-Extensions were created using a [Basic Skeleton](public/extensions/BasicSkeleton).
+Extensions were created using the [Basic Skeleton](public/extensions/BasicSkeleton), which includes a current guide to the Viewer extension lifecycle.
 
-This sample is based on the [Learn APS](http://learnforge.autodesk.io) tutorials in the section *View modelss*.
+This sample is based on the [Autodesk Platform Services tutorials](https://get-started.aps.autodesk.com/tutorials/dashboard/basic/) and Viewer extension guidance.
 
 ## Thumbnail
 
