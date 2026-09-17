@@ -5,7 +5,7 @@
     "options":{},
     "loadonstartup": "false",
     "filestoload":{
-        "jsfiles":["main.js"],
+        "jsfiles":["TransformGizmos.js", "main.js"],
         "cssfiles": []
     },
     "gif": "extension.gif",
