@@ -10,6 +10,7 @@
         "jsfiles":["main.js","ForgeXLS.js","modeldata.js"]
     },
     "includeinlist":"true",
+    "gif": "extension.jpg",
     "externaldependencies":[
         {"type": "js", "link": "https://github.com/eligrey/Blob.js"},
         {"type": "js", "link": "https://github.com/eligrey/FileSaver.js"},
