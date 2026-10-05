@@ -17,6 +17,7 @@
     },
     "bloglink": "",
     "includeinlist": "true",
+    "gif": "extension.gif",
     "externaldependencies": [
         {
             "type": "js",
