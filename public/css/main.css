@@ -12,6 +12,10 @@ body {
   /* margin-right: 30px; */
 }
 
+.popover-content img {
+  width: 100%;
+}
+
 #appBuckets {
   overflow: auto;
   width: 100%;
