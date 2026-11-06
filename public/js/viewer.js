@@ -1,8 +1,21 @@
 let viewer;
 var fileName; // Read as a global by the XLS extension
 
+// Runs the Initializer, once per page.
+let viewerRuntime;
+function initViewerRuntime() {
+  viewerRuntime ??= (async () => {
+    if (!window.isSecureContext) {
+      throw new Error('The viewer requires HTTPS (or http://localhost).');
+    }
+    await new Promise(resolve => Autodesk.Viewing.Initializer({ env: 'AutodeskProduction2', api: 'streamingV2', getAccessToken: getApsToken }, resolve));
+  })();
+  viewerRuntime.catch(() => { viewerRuntime = null; });
+  return viewerRuntime;
+}
+
 // Loads the model into a fresh viewer, replacing any previous one.
-function launchViewer(urn, name) {
+async function launchViewer(urn, name) {
   fileName = name;
   if (viewer) {
     viewer.finish();
@@ -10,15 +23,17 @@ function launchViewer(urn, name) {
   }
   document.getElementById('apsViewer').replaceChildren();
 
-  Autodesk.Viewing.Initializer({ env: 'AutodeskProduction', getAccessToken: getApsToken }, () => {
-    viewer = new Autodesk.Viewing.GuiViewer3D(document.getElementById('apsViewer'));
-    viewer.start(null, null, null, null, {
-      webglInitParams: {
-        useWebGL2: false // Needed by the Potree extension. If this causes problems, use viewer.start() instead.
-      }
-    });
-    Autodesk.Viewing.Document.load('urn:' + urn, onDocumentLoadSuccess, onDocumentLoadFailure);
-  });
+  try {
+    await initViewerRuntime();
+  } catch (err) {
+    console.error(err);
+    setText('viewerMessage', err.message, true);
+    return;
+  }
+
+  viewer = new Autodesk.Viewing.GuiViewer3D(document.getElementById('apsViewer'));
+  viewer.start();
+  Autodesk.Viewing.Document.load('urn:' + urn, onDocumentLoadSuccess, onDocumentLoadFailure);
 }
 
 function onDocumentLoadSuccess(doc) {

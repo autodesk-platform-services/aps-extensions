@@ -20,6 +20,7 @@ ExtensionName[Folder]
     "options": {passed on to the extension constructor; when set, an Options button lets users edit them as JSON},
     "loadOnStartup": true (default: false),
     "link": "https link for a working explanation (default: the extension's README.md on GitHub, if there is one)",
+    "disabled": "reason the extension can't be used for now" (default: not disabled),
     "dependencies": [
         "https://cdn.example.com/library.min.js",
         "libraries/helper.js",
@@ -29,31 +30,24 @@ ExtensionName[Folder]
 </pre>
 - `dependencies`: scripts and stylesheets the extension needs, in load order. Full URLs are loaded as they are, other paths are relative to the extension's `contents/` folder. The type (`js` or `css`) comes from the file name; use the `{"url", "type"}` form only when the URL doesn't end in `.js` or `.css`.
 - The extension's own `.js` and `.css` files directly inside `contents/` are always loaded after the dependencies, alphabetical with `main.*` last. To load one of them earlier, list it in `dependencies` (it won't be loaded twice).
+- `disabled`: the extension is shown in the list, but can't be switched on. The reason is shown as a tooltip.
 - A preview image named `extension.gif`, `.jpg`, `.jpeg` or `.png` in the extension folder is shown in the info popup.
 
 Everything is loaded the first time the extension is switched on. A folder with a broken `config.json` is skipped with a warning in the server log.
 
 Example: [IconMarkupExtension config.json](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/config.json)
 
-> Note: If your extension relies on event Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT to load, in load function check if the data is already loaded, if not only then add the event listener, below code shows the structure.
+> Note: The app uses Viewer v8. Use only documented APIs: no `THREE.*`, `viewer.impl`, `viewer.overlays`, or `NOP_VIEWER`. Get the object tree with `await model.getObjectTreeAsync()` instead of `model.getInstanceTree()`, and properties with `model.getPropertiesAsync()` or `model.getBulkPropertiesAsync()`. Use `Autodesk.Viewing.Math` for vectors, matrices, and boxes, and `Autodesk.Viewing.Scene` with render layers for custom geometry.
 <pre>
 class MyExtension extends Autodesk.Viewing.Extension {
     ...
-    load() {
+    async load() {
         ...
-        if (this.viewer.model.getInstanceTree()) {
-            this.onTreeReady();
-        } else {
-            this.viewer.addEventListener(Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT, this.onTreeReady.bind(this));
-        }
+        const tree = await this.viewer.model.getObjectTreeAsync();
         ...
-    }
-    ...
-    onTreeReady() {
-        const tree = this.viewer.model.getInstanceTree();
-        ...
+        return true;
     }
     ...
 }
 </pre>
-Example: [IconMarkupExtension load function](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/contents/main.js#L26)
+Example: [IconMarkupExtension load function](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/contents/main.js)

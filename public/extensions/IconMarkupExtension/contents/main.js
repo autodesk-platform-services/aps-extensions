@@ -4,18 +4,28 @@ class IconMarkupExtension extends Autodesk.Viewing.Extension {
         this._group = null;
         this._button = null;
         this._icons = options.icons || [];
+        this._tree = null;
+        this._updateIconsCallback = () => {
+            if (this._enabled) {
+                this.updateIcons();
+            }
+        };
     }
 
-    load() {
-        if (this.viewer.model.getInstanceTree()) {
-            this.customize();
-        } else {
-            this.viewer.addEventListener(Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT, this.customize());
-        }        
+    async load() {
+        this._tree = await this.viewer.model.getObjectTreeAsync();
+        this.viewer.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, this._updateIconsCallback);
+        this.viewer.addEventListener(Autodesk.Viewing.ISOLATE_EVENT, this._updateIconsCallback);
+        this.viewer.addEventListener(Autodesk.Viewing.HIDE_EVENT, this._updateIconsCallback);
+        this.viewer.addEventListener(Autodesk.Viewing.SHOW_EVENT, this._updateIconsCallback);
         return true;
     }
 
     unload() {
+        this.viewer.removeEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, this._updateIconsCallback);
+        this.viewer.removeEventListener(Autodesk.Viewing.ISOLATE_EVENT, this._updateIconsCallback);
+        this.viewer.removeEventListener(Autodesk.Viewing.HIDE_EVENT, this._updateIconsCallback);
+        this.viewer.removeEventListener(Autodesk.Viewing.SHOW_EVENT, this._updateIconsCallback);
         // Clean our UI elements if we added any
         if (this._group) {
             this._group.removeControl(this._button);
@@ -25,18 +35,6 @@ class IconMarkupExtension extends Autodesk.Viewing.Extension {
         }
         $('#' + this.viewer.clientContainer.id + ' div.adsk-viewing-viewer label.markup').remove();
         return true;
-    }
-
-    customize(){
-        const updateIconsCallback = () => {
-            if (this._enabled) {
-                this.updateIcons();
-            }
-        };
-        this.viewer.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, updateIconsCallback);
-        this.viewer.addEventListener(Autodesk.Viewing.ISOLATE_EVENT, updateIconsCallback);
-        this.viewer.addEventListener(Autodesk.Viewing.HIDE_EVENT, updateIconsCallback);
-        this.viewer.addEventListener(Autodesk.Viewing.SHOW_EVENT, updateIconsCallback);
     }
 
     onToolbarCreated() {
@@ -68,23 +66,18 @@ class IconMarkupExtension extends Autodesk.Viewing.Extension {
         if (!show) return;
 
         // do we have anything to show?
-        if (this._icons === undefined || this.icons === null) return;
+        if (!this._icons) return;
 
-        // do we have access to the instance tree?
-        const tree = this.viewer.model.getInstanceTree();
-        if (tree === undefined) { console.log('Loading tree...'); return; }
+        // do we have access to the object tree?
+        if (!this._tree) { console.log('Loading tree...'); return; }
 
         const onClick = (e) => {
-            this.viewer.select($(e.currentTarget).data('id'));
-            this.viewer.utilities.fitToView();
+            const dbId = $(e.currentTarget).data('id');
+            this.viewer.select(dbId);
+            this.viewer.fitToView([dbId]);
         };
 
-        this._frags = {}
-        for (var i = 0; i < this._icons.length; i++) {
-            // we need to collect all the fragIds for a given dbId
-            const icon = this._icons[i];
-            this._frags['dbId' + icon.dbId] = []
-
+        for (const icon of this._icons) {
             // create the label for the dbId
             const $label = $(`
             <label class="markup update" data-id="${icon.dbId}">
@@ -94,37 +87,26 @@ class IconMarkupExtension extends Autodesk.Viewing.Extension {
             $label.css('display', this.viewer.isNodeVisible(icon.dbId) ? 'block' : 'none');
             $label.on('click', this.options.onClick || onClick);
             $viewer.append($label);
-
-            // now collect the fragIds
-            const getChildren = (topParentId, dbId) => {
-                if (tree.getChildCount(dbId) === 0)
-                    getFrags(topParentId, dbId); // get frags for this leaf child
-                tree.enumNodeChildren(dbId, (childId) => {
-                    getChildren(topParentId, childId);
-                })
-            }
-            const getFrags = (topParentId, dbId) => {
-                tree.enumNodeFragments(dbId, (fragId) => {
-                    this._frags['dbId' + topParentId].push(fragId);
-                    this.updateIcons(); // re-position for each fragId found
-                });
-            }
-            getChildren(icon.dbId, icon.dbId);
         }
+        this.updateIcons();
     }
 
+    // Returns the bounding box of a dbId (and its children) as it appears in the viewer,
+    // or null if none of its geometry has been loaded yet (models stream in).
     getModifiedWorldBoundingBox(dbId) {
-        var fragList = this.viewer.model.getFragmentList();
-        const nodebBox = new THREE.Box3()
-
-        // for each fragId on the list, get the bounding box
-        for (const fragId of this._frags['dbId' + dbId]) {
-            const fragbBox = new THREE.Box3();
-            fragList.getWorldBounds(fragId, fragbBox);
-            nodebBox.union(fragbBox); // create a unifed bounding box
-        }
-
-        return nodebBox
+        const avm = Autodesk.Viewing.Math;
+        const instances = this.viewer.model.getInstances();
+        const nodeBox = new avm.Box3();
+        const instanceBox = new avm.Box3();
+        let found = false;
+        this._tree.enumNodeInstances(dbId, (instanceId) => {
+            if (instances.getGeometry(instanceId)) {
+                instances.getWorldBounds(instanceId, instanceBox);
+                nodeBox.union(instanceBox);
+                found = true;
+            }
+        }, true);
+        return found ? nodeBox : null;
     }
 
     updateIcons() {
@@ -132,8 +114,14 @@ class IconMarkupExtension extends Autodesk.Viewing.Extension {
             const $label = $(label);
             const id = $label.data('id');
 
-            // get the center of the dbId (based on its fragIds bounding boxes)
-            const pos = this.viewer.worldToClient(this.getModifiedWorldBoundingBox(id).center());
+            // get the center of the dbId (based on its bounding box)
+            const box = this.getModifiedWorldBoundingBox(id);
+            if (!box) {
+                $label.css('display', 'none');
+                continue;
+            }
+            const center = box.getCenter(new Autodesk.Viewing.Math.Vector3());
+            const pos = this.viewer.worldToClient(center);
 
             // position the label center to it
             $label.css('left', Math.floor(pos.x - $label[0].offsetWidth / 2) + 'px');

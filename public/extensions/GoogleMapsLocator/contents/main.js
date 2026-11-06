@@ -77,7 +77,7 @@ GoogleMapsLocator.prototype.onToolbarCreated = function () {
 
         if (!this._enabled) return;
 
-        loadGoogleMaps(this.options.apiKey).then(() => {
+        loadGoogleMaps(this.options.apiKey).then(() => this.viewer.model.getObjectTreeAsync()).then((tree) => {
             // initialize the map
             if (this.map == null) {
                 this.map = new google.maps.Map(document.getElementById('googlemap'), {
@@ -90,10 +90,12 @@ GoogleMapsLocator.prototype.onToolbarCreated = function () {
                 });
             }
 
-            // draw model boundoung box & center
-            var bb = this.viewer.model.getBoundingBox();
-            this.drawBoundingBox(bb.min, bb.max);
-            this.cameraChanged(this.viewer.autocam); // first run (center of the model)
+            // draw model bounding box & center. The box comes from the object tree's root, not from
+            // model.getBoundingBox(), which with the legacy 'AutodeskProduction' env throws in the v8 preview after instances of a loaded model were moved.
+            var box = new Float32Array(6);
+            tree.getNodeBox(tree.getRootId(), box);
+            this.drawBoundingBox({ x: box[0], y: box[1] }, { x: box[3], y: box[4] });
+            this.cameraChanged(); // first run (center of the model)
         }).catch(err => alert(err.message));
     };
     this._button.setToolTip('Show map location');
@@ -101,7 +103,8 @@ GoogleMapsLocator.prototype.onToolbarCreated = function () {
     this._group.addControl(this._button);
 
     // listen to camera changes
-    this.viewer.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, (e) => { this.cameraChanged(e.target.autocam) });
+    this._onCameraChange = () => this.cameraChanged();
+    this.viewer.addEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, this._onCameraChange);
 };
 
 GoogleMapsLocator.prototype.drawBoundingBox = function (min, max) {
@@ -143,18 +146,19 @@ GoogleMapsLocator.prototype.drawPolygon = function (polygon) {
     polygon.setMap(_this.map);
 }
 
-GoogleMapsLocator.prototype.cameraChanged = function (camera) {
+GoogleMapsLocator.prototype.cameraChanged = function () {
     // basic check...
     if (this.map == null) return;
     if (this.geoExtension == null) return;
 
-    // adjust the center of the map
-    var geoLoc = this.geoExtension.lmvToLonLat(camera.center);
+    // adjust the center of the map to the camera target
+    var geoLoc = this.geoExtension.lmvToLonLat(this.viewer.navigation.getTarget());
     this.map.setCenter({ lat: geoLoc.y, lng: geoLoc.x });
 }
 
 
 GoogleMapsLocator.prototype.unload = function () {
+    if (this._onCameraChange) this.viewer.removeEventListener(Autodesk.Viewing.CAMERA_CHANGE_EVENT, this._onCameraChange);
     if (this.viewer.toolbar !== null) this.viewer.toolbar.removeControl(this.subToolbar);
     if (this.panel !== null) this.panel.setVisible(false);
     if (this._group) {

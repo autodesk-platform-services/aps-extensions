@@ -2,14 +2,14 @@ if (!window.XLSX) alert('Sheet JS is required for this sample');
 
 let ApsXLS = {
 
-  downloadXLSX: function (fileName, status) {
+  downloadXLSX: function (viewer, fileName, status) {
 
     if (status) {
       status(false, 'Preparing ' + fileName);
       status(false, 'Reading project information....');
     }
 
-    this.prepareTables(function (tables) {
+    this.prepareTables(viewer.model, function (tables) {
       if (status) status(false, 'Building XLSX file...');
 
       let wb = new Workbook();
@@ -90,22 +90,22 @@ let ApsXLS = {
     return ws;
   },
   
-  prepareTables: function (callback) {
-    let data = new ModelData(this);
+  prepareTables: function (model, callback) {
+    let data = new ModelData(model);
     data.init(async function () {
         let hierarchy = data._modelData.Category;
-        let t = await ApsXLS.prepareRawData(hierarchy);
+        let t = await ApsXLS.prepareRawData(model, hierarchy);
         callback(t);
     });
   },
 
-  prepareRawData: async function (hierarchy) {
+  prepareRawData: async function (model, hierarchy) {
     let tables = {};
     for (let key in hierarchy) {
       let idsOnCategory = [];
       if (hierarchy.hasOwnProperty(key)) {
         idsOnCategory = hierarchy[key];        
-        let rows = await getAllProperties(idsOnCategory);
+        let rows = await getAllProperties(model, idsOnCategory);
         tables[key] = formatRows(rows);
       }
     }
@@ -113,24 +113,9 @@ let ApsXLS = {
   }
 };
 
-// Get Properties by dbid
-async function getProperties(model, dbid) {
-  return new Promise(function(resolve, reject) {
-      model.getProperties(dbid, function (props) {
-          resolve(props);
-      });
-  });
-}
-
 // Get Properties by Category
-async function getAllProperties(idsOnCategory) {
-  return new Promise(function(resolve, reject) {
-      let promises = [];
-      idsOnCategory.forEach(function (dbid) {
-        promises.push(getProperties(NOP_VIEWER.model, dbid));
-      });
-      resolve(Promise.all(promises));
-  });
+function getAllProperties(model, idsOnCategory) {
+  return Promise.all(idsOnCategory.map(dbid => model.getPropertiesAsync(dbid)));
 }
 
 //  Helper Functions

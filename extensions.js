@@ -34,7 +34,7 @@ function resolveDependency(folder, dependency) {
 // Folders starting with "_" are hidden from the list.
 function describeExtension(folder) {
     const config = exists(folder, 'config.json') ? readJson(folder, 'config.json') : {};
-    const { displayName = folder, description = '', options, loadOnStartup = false, dependencies = [] } = config;
+    const { displayName = folder, description = '', options, loadOnStartup = false, dependencies = [], disabled } = config;
     const ownFiles = [...scanContents(folder, 'css'), ...scanContents(folder, 'js')];
     return {
         name: folder,
@@ -43,6 +43,8 @@ function describeExtension(folder) {
         options: options || {},
         editable: options !== undefined,
         loadOnStartup,
+        // A reason (string) or true when the extension can't be used for now; it's listed but can't be switched on
+        disabled: disabled || undefined,
         includeInList: !folder.startsWith('_'),
         link: config.link || (exists(folder, 'README.md') ? REPO_URL + folder : undefined),
         preview: PREVIEW_FILES.find(file => exists(folder, file)),

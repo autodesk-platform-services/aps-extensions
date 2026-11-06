@@ -24,8 +24,8 @@ class XLSExtension extends Autodesk.Viewing.Extension {
   onToolbarCreated() {
       // Button 1
     var button1 = new Autodesk.Viewing.UI.Button('toolbarXLS');
-    button1.onClick = function (e) {
-        ApsXLS.downloadXLSX(fileName.replace(/\./g, '') + ".xlsx", statusCallback );/*Optional*/
+    button1.onClick = (e) => {
+        ApsXLS.downloadXLSX(this.viewer, fileName.replace(/\./g, '') + ".xlsx", statusCallback );/*Optional*/
     };
     button1.addClass('toolbarXLSButton');
     button1.setToolTip('Export to .XLSX');

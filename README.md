@@ -8,7 +8,7 @@
 [![oAuth2](https://img.shields.io/badge/oAuth2-v1-green.svg)](http://forge.autodesk.com/)
 [![Data-Management](https://img.shields.io/badge/Data%20Management-v1-green.svg)](http://forge.autodesk.com/)
 [![Model-Derivative](https://img.shields.io/badge/Model%20Derivative-v2-green.svg)](http://forge.autodesk.com/)
-[![Viewer](https://img.shields.io/badge/Viewer-v7-green.svg)](http://forge.autodesk.com/)
+[![Viewer](https://img.shields.io/badge/Viewer-v8-green.svg)](http://forge.autodesk.com/)
 
 [![Level](https://img.shields.io/badge/Level-Basic-blue.svg)](http://forge.autodesk.com/)
 
@@ -76,6 +76,12 @@ Alternatively, put the variables in a `.env` file in the project folder. `npm st
 The app does not upload files. Upload and translate your test designs into the `APS_BUCKET` bucket separately, and they will be listed in the app.
 
 Open the browser: [http://localhost:3000](http://localhost:3000).
+
+### Viewer version
+
+The app uses the Viewer v8 preview. Viewer v8 requires a secure context: HTTPS, or `http://localhost`. It won't run from a LAN IP address over plain HTTP. The viewer files are included in [public/index.html](public/index.html), and the viewer is initialized with `env: 'AutodeskProduction2'` and `api: 'streamingV2'` in [public/js/viewer.js](public/js/viewer.js). With the legacy `env: 'AutodeskProduction'`, moving model elements (as the Transformation extension does) breaks the viewer's bounding box calculations in the v8 preview.
+
+The Potree Point Clouds extension is disabled for now. It relies on three.js rendering, which Viewer v8 doesn't expose.
 
 # Adding a new extension
 

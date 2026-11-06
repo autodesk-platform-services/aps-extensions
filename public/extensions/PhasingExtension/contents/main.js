@@ -155,7 +155,7 @@ class PhasingPanel extends Autodesk.Viewing.UI.DockingPanel {
   }
 
   toggleOrientation(isVertical) {
-    const { left: startX, top: startY, right: endX, bottom: endY } = this.extension.viewer.impl.getCanvasBoundingClientRect();
+    const { left: startX, top: startY, right: endX, bottom: endY } = this.extension.viewer.container.getBoundingClientRect();
 
     let defaultPanelHeigth = (this.options.height || 400);
     let defaultPanelWidth = (this.options.width || 500);
@@ -174,17 +174,16 @@ class PhasingPanel extends Autodesk.Viewing.UI.DockingPanel {
     }
   }
 
-  update(model, dbids) {
+  async update(model, dbids) {
     if (phasing_config.tasks.length === 0) {
       this.inputCSV();
     }
-    model.getBulkProperties(dbids, { propFilter: [phasing_config.propFilter] }, (results) => {
-      results.map((result => {
-        this.updateObjects(result);
-      }))
-    }, (err) => {
+    try {
+      const results = await model.getBulkPropertiesAsync(dbids, { propFilter: [phasing_config.propFilter] });
+      results.forEach(result => this.updateObjects(result));
+    } catch (err) {
       console.error(err);
-    });
+    }
     if (phasing_config.tasks.length > 0) {
       this.gantt = this.createGanttChart();
       this.handleColors.call(this);
@@ -288,7 +287,7 @@ class PhasingPanel extends Autodesk.Viewing.UI.DockingPanel {
   fromRGB2Color(rgbString) {
     if (rgbString) {
       let colorsInt = rgbString.replaceAll(' ', '').split(',').map(colorString => parseInt(colorString, 10));
-      return new THREE.Vector4(colorsInt[0] / 255, colorsInt[1] / 255, colorsInt[2] / 255, 0.5);
+      return new Autodesk.Viewing.Math.Vector4(colorsInt[0] / 255, colorsInt[1] / 255, colorsInt[2] / 255, 0.5);
     }
     else {
       return null;
@@ -480,18 +479,15 @@ class PhasingExtension extends Autodesk.Viewing.Extension {
     }
   }
 
-  findLeafNodes(model) {
-    return new Promise(function (resolve, reject) {
-      model.getObjectTree(function (tree) {
-        let leaves = [];
-        tree.enumNodeChildren(tree.getRootId(), function (dbid) {
-          if (tree.getChildCount(dbid) === 0) {
-            leaves.push(dbid);
-          }
-        }, true);
-        resolve(leaves);
-      }, reject);
-    });
+  async findLeafNodes(model) {
+    const tree = await model.getObjectTreeAsync();
+    const leaves = [];
+    tree.enumNodeChildren(tree.getRootId(), function (dbid) {
+      if (tree.getChildCount(dbid) === 0) {
+        leaves.push(dbid);
+      }
+    }, true);
+    return leaves;
   }
 
   async update() {

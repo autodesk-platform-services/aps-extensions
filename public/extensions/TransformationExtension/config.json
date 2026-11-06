@@ -1,6 +1,6 @@
 {
     "displayName": "Transformation",
-    "description": "Pupose of this extension is to select an element and move or transform it in any direction.",
+    "description": "Purpose of this extension is to drag an element to move it horizontally or, with Shift held, vertically.",
     "dependencies": [
         "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
     ]

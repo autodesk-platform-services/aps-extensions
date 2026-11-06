@@ -8,7 +8,7 @@ Allows moving elements on the model.
 
 ## Usage
 
-Enable the extension, click on the model element, use the `gizmo` to move the element.
+Enable the extension and switch on the tool in the toolbar. Then drag a model element to move it on the horizontal plane, or hold Shift while dragging to move it up and down.
 
 ## Setup
 
@@ -27,6 +27,6 @@ viewer.loadExtension("TransformationExtension")
 
 ## How it works
 
-Based on the Three.js [transform control](https://threejs.org/examples/misc_controls_transform.html), the development team implemented the section command using this nice 3d manipulator allowing to select plane, axis and rotation. This is provided out of the box with the [GuiViewer3D](https://forge.autodesk.com/en/docs/viewer/v7/reference/Viewing/GuiViewer3D/)
+The tool uses `viewer.hitTest` to find the element under the cursor. It then wraps the element's instances in `Autodesk.Viewing.Scene.InstanceNode3D` nodes of the model's scene graph (Scene API) and moves them as the mouse moves along a drag plane through the picked point. Only documented APIs are used, so the extension works with both Viewer v7 (with the Scene API enabled) and Viewer v8.
 
-Reusing some of their implementation to provide the ability to stick the control on the selected mesh and drag it around. It's more challenging that it may seem as the viewer has a complex way to work with Three.js meshes. This is due to enhancements that we created on top of that library to be able to support models with a huge number of meshes.
+The previous version used a port of the three.js transform controls gizmo. That gizmo depended on three.js and viewer internals that are no longer available in Viewer v8.

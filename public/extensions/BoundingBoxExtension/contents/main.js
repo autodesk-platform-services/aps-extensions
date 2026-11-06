@@ -1,178 +1,100 @@
 ///////////////////////////////////////////////////////////////////
 // Bounding Box viewer extension
 // Based on https://aps.autodesk.com/blog/adding-custom-lines-forge-viewer-scene
+// Draws the box in an overlay render layer using the Scene API.
 ///////////////////////////////////////////////////////////////////
-AutodeskNamespace("Autodesk.ADN.Viewing.Extension");
+const BoundingBoxLayer = 'boundingBox';
 
-Autodesk.ADN.Viewing.Extension.BoundingBox =  function (viewer, options) {
+class BoundingBoxExtension extends Autodesk.Viewing.Extension {
+    constructor(viewer, options) {
+        super(viewer, options);
+        this._onItemSelected = this._onItemSelected.bind(this);
+        this._layerModel = null;
+        this._material = null;
+        this._boxInstanceId = null;
+    }
 
-    Autodesk.Viewing.Extension.call(this, viewer, options);
+    load() {
+        const avs = Autodesk.Viewing.Scene;
+        const layers = this.viewer.getRenderLayers();
+        layers.create(BoundingBoxLayer, { renderTarget: 'overlay', renderOrder: 1 });
+        this._layerModel = new Autodesk.Viewing.Model();
+        layers.addModel(this._layerModel, BoundingBoxLayer);
+        // Note: lines are always 1px wide in v8 (the v7 version used linewidth: 2)
+        this._material = new avs.LineMaterial({ color: 0xffff00 });
 
-    let _self = this;
-
-    _self.load = function () {
-
-        viewer.addEventListener(
-            Autodesk.Viewing.SELECTION_CHANGED_EVENT,
-            onItemSelected);
-
-        _self.linesMaterial = new THREE.LineBasicMaterial({
-            color: 0xffff00,
-            linewidth: 2
-        });
-
-        viewer.impl.createOverlayScene(
-            'boundingBox',
-            _self.linesMaterial);
-
-        console.log('Autodesk.ADN.Viewing.Extension.BoundingBox loaded');
-
+        this.viewer.addEventListener(Autodesk.Viewing.SELECTION_CHANGED_EVENT, this._onItemSelected);
+        console.log('BoundingBoxExtension loaded');
         return true;
     }
 
-    _self.unload = function () {
-
-        viewer.removeEventListener(
-            Autodesk.Viewing.SELECTION_CHANGED_EVENT,
-            onItemSelected);
-       
-        viewer.impl.removeOverlayScene('boundingBox');
-
-        viewer.impl.sceneUpdated(true);
-
-        console.log('Autodesk.ADN.Viewing.Extension.BoundingBox unloaded');
-
+    unload() {
+        this.viewer.removeEventListener(Autodesk.Viewing.SELECTION_CHANGED_EVENT, this._onItemSelected);
+        this.viewer.getRenderLayers().remove(BoundingBoxLayer);
+        this._layerModel = null;
+        this.viewer.refresh(true);
+        console.log('BoundingBoxExtension unloaded');
         return true;
     }
 
-    function onItemSelected (event) {
-
-        const bBox = getModifiedWorldBoundingBox(
-          event.fragIdsArray,
-          viewer.model.getFragmentList()
-        );
-
-        console.log(bBox);
-        drawBox(bBox.min, bBox.max);
+    async _onItemSelected(event) {
+        const model = event.model || this.viewer.model;
+        const dbIds = event.dbIdArray || [];
+        const box = dbIds.length > 0 ? await this._getModifiedWorldBoundingBox(model, dbIds) : null;
+        if (!this._layerModel) return; // unloaded in the meantime
+        this._drawBox(box);
     }
 
-    //returns bounding box as it appears in the viewer
-    // (transformations could be applied)
-    function getModifiedWorldBoundingBox(fragIds, fragList) {
-
-        const fragbBox = new THREE.Box3();
-        const nodebBox = new THREE.Box3();
-
-        fragIds.forEach(function(fragId) {
-            fragList.getWorldBounds(fragId, fragbBox);
-            nodebBox.union(fragbBox);
-        });
-
-        return nodebBox;
-    }
-
-    // Returns bounding box as loaded in the file
-    // (no explosion nor transformation)
-    function getOriginalWorldBoundingBox(fragIds, fragList) {
-
-        const fragBoundingBox = new THREE.Box3();
-        const nodeBoundingBox = new THREE.Box3();
-
-        const fragmentBoxes = fragList.boxes;
-
-        fragIds.forEach(function(fragId) {
-
-            const boffset = fragId * 6;
-
-            fragBoundingBox.min.x = fragmentBoxes[boffset];
-            fragBoundingBox.min.y = fragmentBoxes[boffset+1];
-            fragBoundingBox.min.z = fragmentBoxes[boffset+2];
-            fragBoundingBox.max.x = fragmentBoxes[boffset+3];
-            fragBoundingBox.max.y = fragmentBoxes[boffset+4];
-            fragBoundingBox.max.z = fragmentBoxes[boffset+5];
-
-            nodeBoundingBox.union(fragBoundingBox);
-        });
-
-        return nodeBoundingBox;
-    }
-
-    function drawLines(coordsArray, material) {
-
-        for (let i = 0; i < coordsArray.length; i+=2) {
-
-            const start = coordsArray[i];
-            const end = coordsArray[i+1];
-
-            const geometry = new THREE.Geometry();
-
-            geometry.vertices.push(new THREE.Vector3(
-                start.x, start.y, start.z));
-
-            geometry.vertices.push(new THREE.Vector3(
-                end.x, end.y, end.z));
-
-            geometry.computeLineDistances();
-
-            const lines = new THREE.Line(geometry, material, THREE.LinePieces);
-
-            viewer.impl.addOverlay('boundingBox', lines);
+    // Returns bounding box as it appears in the viewer (transformations could be applied),
+    // or null if none of the geometry has been loaded yet.
+    async _getModifiedWorldBoundingBox(model, dbIds) {
+        const avm = Autodesk.Viewing.Math;
+        const tree = await model.getObjectTreeAsync();
+        const instances = model.getInstances();
+        const nodeBox = new avm.Box3();
+        const instanceBox = new avm.Box3();
+        let found = false;
+        for (const dbId of dbIds) {
+            tree.enumNodeInstances(dbId, (instanceId) => {
+                if (instances.getGeometry(instanceId)) {
+                    instances.getWorldBounds(instanceId, instanceBox);
+                    nodeBox.union(instanceBox);
+                    found = true;
+                }
+            }, true);
         }
+        return found ? nodeBox : null;
     }
 
-    function drawBox(min, max) {
-        
-        drawLines([
-
-            {x: min.x, y: min.y, z: min.z},
-            {x: max.x, y: min.y, z: min.z},
-
-            {x: max.x, y: min.y, z: min.z},
-            {x: max.x, y: min.y, z: max.z},
-
-            {x: max.x, y: min.y, z: max.z},
-            {x: min.x, y: min.y, z: max.z},
-
-            {x: min.x, y: min.y, z: max.z},
-            {x: min.x, y: min.y, z: min.z},
-
-            {x: min.x, y: max.y, z: max.z},
-            {x: max.x, y: max.y, z: max.z},
-
-            {x: max.x, y: max.y, z: max.z},
-            {x: max.x, y: max.y, z: min.z},
-
-            {x: max.x, y: max.y, z: min.z},
-            {x: min.x, y: max.y, z: min.z},
-
-            {x: min.x, y: max.y, z: min.z},
-            {x: min.x, y: max.y, z: max.z},
-
-            {x: min.x, y: min.y, z: min.z},
-            {x: min.x, y: max.y, z: min.z},
-
-            {x: max.x, y: min.y, z: min.z},
-            {x: max.x, y: max.y, z: min.z},
-
-            {x: max.x, y: min.y, z: max.z},
-            {x: max.x, y: max.y, z: max.z},
-
-            {x: min.x, y: min.y, z: max.z},
-            {x: min.x, y: max.y, z: max.z}],
-
-            _self.linesMaterial);
-
-        viewer.impl.sceneUpdated(true);
+    // Replaces the previously drawn box (if any) with the new one; draws nothing for a null box.
+    _drawBox(box) {
+        const avs = Autodesk.Viewing.Scene;
+        const instances = this._layerModel.getInstances();
+        if (this._boxInstanceId !== null) {
+            instances.remove(this._boxInstanceId);
+            this._boxInstanceId = null;
+        }
+        if (box) {
+            const { min, max } = box;
+            // The 8 corners of the box...
+            const positions = new Float32Array([
+                min.x, min.y, min.z,  max.x, min.y, min.z,  max.x, min.y, max.z,  min.x, min.y, max.z,
+                min.x, max.y, min.z,  max.x, max.y, min.z,  max.x, max.y, max.z,  min.x, max.y, max.z
+            ]);
+            // ... and its 12 edges, as pairs of corner indices (LineMaterial draws one segment per pair)
+            const indices = new Uint16Array([
+                0, 1,  1, 2,  2, 3,  3, 0, // bottom (min y)
+                4, 5,  5, 6,  6, 7,  7, 4, // top (max y)
+                0, 4,  1, 5,  2, 6,  3, 7  // sides
+            ]);
+            const geometry = new avs.BufferGeometry();
+            geometry.setAttribute('position', new avs.BufferAttribute(positions, 3));
+            geometry.setIndices(indices);
+            const id = instances.add(geometry, this._material);
+            if (id >= 0) this._boxInstanceId = id;
+        }
+        this.viewer.refresh(true);
     }
-};
+}
 
-Autodesk.ADN.Viewing.Extension.BoundingBox.prototype =
-    Object.create(Autodesk.Viewing.Extension.prototype);
-
-Autodesk.ADN.Viewing.Extension.BoundingBox.prototype.constructor =
-    Autodesk.ADN.Viewing.Extension.BoundingBox;
-
-Autodesk.Viewing.theExtensionManager.registerExtension(
-    'BoundingBoxExtension',
-    Autodesk.ADN.Viewing.Extension.BoundingBox);
-
+Autodesk.Viewing.theExtensionManager.registerExtension('BoundingBoxExtension', BoundingBoxExtension);

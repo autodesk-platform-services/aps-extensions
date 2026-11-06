@@ -39,13 +39,13 @@ class TabSelectionExtension extends Autodesk.Viewing.Extension {
         if (this.viewer.getSelectionCount() === 0) this.initialSelection = [];
     }
 
-    rotate() {
+    async rotate() {
         // get current selection
         let dbIds = this.viewer.getSelection();
         // if first time, let's store the initial dbId
         if (this.initialSelection.length == 0) this.initialSelection = dbIds;
         // this gives the model tree
-        let tree = this.viewer.model.getInstanceTree();
+        let tree = await this.viewer.model.getObjectTreeAsync();
         // prepare to store the parent nodes
         let newSelection = [];
         // let's check the selection...

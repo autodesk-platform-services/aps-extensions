@@ -63,26 +63,8 @@
             }
         }
 
-        async getPropertiesAsync(dbId, model) {
-            return new Promise((resolve, reject) => {
-                model.getProperties2(
-                    dbId,
-                    (result) => resolve(result),
-                    (error) => reject(error)
-                );
-            });
-        }
-
         async getElementsByCategoryAsync(category) {
-            return new Promise((resolve, reject) => {
-                this.viewer.search(
-                    category,
-                    (dbIds) => resolve(dbIds),
-                    (error) => reject(error),
-                    ['Category'],
-                    { searchHidden: true }
-                );
-            });
+            return this.viewer.model.searchAsync(category, ['Category'], { searchHidden: true });
         }
 
         async getRoomDbIds() {
@@ -99,150 +81,97 @@
             }
         }
 
-        getBoundingBox(dbId, model) {
-            const it = model.getInstanceTree();
-            const fragList = model.getFragmentList();
-            let bounds = new THREE.Box3();
-
-            it.enumNodeFragments(dbId, (fragId) => {
-                let box = new THREE.Box3();
-                fragList.getWorldBounds(fragId, box);
-                bounds.union(box);
+        // Calls the callback for each loaded instance (with geometry) of a dbId and its children.
+        async enumLoadedInstances(dbId, model, callback) {
+            const tree = await model.getObjectTreeAsync();
+            const instances = model.getInstances();
+            tree.enumNodeInstances(dbId, (instanceId) => {
+                if (instances.getGeometry(instanceId)) callback(instanceId, instances);
             }, true);
+        }
 
+        async getBoundingBox(dbId, model) {
+            const avm = Autodesk.Viewing.Math;
+            const bounds = new avm.Box3();
+            const box = new avm.Box3();
+            await this.enumLoadedInstances(dbId, model, (instanceId, instances) => {
+                instances.getWorldBounds(instanceId, box);
+                bounds.union(box);
+            });
             return bounds;
         }
 
-        getLeafFragIds(model, leafId) {
-            const instanceTree = model.getData().instanceTree;
-            const fragIds = [];
-
-            instanceTree.enumNodeFragments(leafId, function (fragId) {
-                fragIds.push(fragId);
-            });
-
-            return fragIds;
-        }
-
-        getComponentGeometryInfo(dbId, model) {
-            const viewer = this.viewer;
-            const viewerImpl = viewer.impl;
-            const fragIds = this.getLeafFragIds(model, dbId);
-            let matrixWorld = null;
-
-            const meshes = fragIds.map((fragId) => {
-                const renderProxy = viewerImpl.getRenderProxy(model, fragId);
-
-                const geometry = renderProxy.geometry;
-                const attributes = geometry.attributes;
-                const positions = geometry.vb ? geometry.vb : attributes.position.array;
-
-                const indices = attributes.index.array || geometry.ib;
-                const stride = geometry.vb ? geometry.vbstride : 3;
-                const offsets = geometry.offsets;
-
-                matrixWorld = matrixWorld || renderProxy.matrixWorld.elements;
-
-                return {
-                    positions,
-                    indices,
-                    offsets,
-                    stride
-                };
-            });
-
-            return {
-                matrixWorld,
-                meshes
-            };
-        }
-
-        getComponentGeometry(data, vertexArray) {
-            const offsets = [
-                {
-                    count: data.indices.length,
-                    index: 0,
-                    start: 0
+        // Collects the world-space vertices and triangles of a dbId's geometry.
+        // Returns { vertices: Float64Array (x, y, z, ...), triangles: Float64Array (9 values per triangle) }.
+        async getWorldMesh(dbId, model) {
+            const avm = Autodesk.Viewing.Math;
+            const vertices = [];
+            const triangles = [];
+            const matrix = new avm.Matrix4();
+            const point = new avm.Vector3();
+            await this.enumLoadedInstances(dbId, model, (instanceId, instances) => {
+                const geometry = instances.getGeometry(instanceId);
+                instances.getTransformWorld(instanceId, matrix);
+                const vertexCount = geometry.getVertexCount();
+                const world = new Float64Array(vertexCount * 3);
+                for (let i = 0; i < vertexCount; i++) {
+                    if (!geometry.getPosition(i, point)) continue;
+                    point.applyMatrix4(matrix);
+                    world[i * 3] = point.x;
+                    world[i * 3 + 1] = point.y;
+                    world[i * 3 + 2] = point.z;
                 }
-            ];
+                for (let i = 0; i < world.length; i++) vertices.push(world[i]);
 
-            for (let oi = 0, ol = offsets.length; oi < ol; ++oi) {
-                let start = offsets[oi].start;
-                let count = offsets[oi].count;
-                let index = offsets[oi].index;
-
-                for (let i = start, il = start + count; i < il; i += 3) {
-                    const a = index + data.indices[i];
-                    const b = index + data.indices[i + 1];
-                    const c = index + data.indices[i + 2];
-
-                    const vA = new THREE.Vector3();
-                    const vB = new THREE.Vector3();
-                    const vC = new THREE.Vector3();
-
-                    vA.fromArray(data.positions, a * data.stride);
-                    vB.fromArray(data.positions, b * data.stride);
-                    vC.fromArray(data.positions, c * data.stride);
-
-                    vertexArray.push(vA);
-                    vertexArray.push(vB);
-                    vertexArray.push(vC);
+                // Non-indexed geometry lists the triangle vertices in order
+                const indices = geometry.getIndices();
+                const indexCount = indices ? indices.length : vertexCount;
+                for (let i = 0; i + 2 < indexCount; i += 3) {
+                    for (let k = 0; k < 3; k++) {
+                        const v = indices ? indices[i + k] : i + k;
+                        triangles.push(world[v * 3], world[v * 3 + 1], world[v * 3 + 2]);
+                    }
                 }
-            }
-        }
-
-        buildComponentMesh(data) {
-            const vertexArray = [];
-
-            for (let idx = 0; idx < data.nbMeshes; ++idx) {
-                const meshData = {
-                    positions: data['positions' + idx],
-                    indices: data['indices' + idx],
-                    stride: data['stride' + idx]
-                }
-
-                this.getComponentGeometry(meshData, vertexArray);
-            }
-
-            const geometry = new THREE.Geometry();
-
-            for (let i = 0; i < vertexArray.length; i += 3) {
-                geometry.vertices.push(vertexArray[i]);
-                geometry.vertices.push(vertexArray[i + 1]);
-                geometry.vertices.push(vertexArray[i + 2]);
-
-                const face = new THREE.Face3(i, i + 1, i + 2);
-                geometry.faces.push(face);
-            }
-
-            const matrixWorld = new THREE.Matrix4();
-            matrixWorld.fromArray(data.matrixWorld);
-
-            const mesh = new THREE.Mesh(geometry);
-            mesh.applyMatrix(matrixWorld);
-            mesh.boundingBox = data.boundingBox;
-            mesh.bsp = new ThreeBSP(mesh)
-            mesh.dbId = data.dbId;
-
-            return mesh;
-        }
-
-        buildCsgMesh(dbId, model) {
-            const geometry = this.getComponentGeometryInfo(dbId, model);
-            const data = {
-                boundingBox: this.getBoundingBox(dbId, model),
-                matrixWorld: geometry.matrixWorld,
-                nbMeshes: geometry.meshes.length,
-                dbId
-            };
-
-            geometry.meshes.forEach((mesh, idx) => {
-                data['positions' + idx] = mesh.positions;
-                data['indices' + idx] = mesh.indices;
-                data['stride' + idx] = mesh.stride;
             });
+            return { vertices: new Float64Array(vertices), triangles: new Float64Array(triangles) };
+        }
 
-            return this.buildComponentMesh(data);
+        // Counts how many triangles a ray crosses (Moller-Trumbore); an odd count means the origin is inside a closed mesh.
+        static isPointInsideMesh(px, py, pz, triangles) {
+            // A direction that's unlikely to be parallel to (or pass exactly through edges of) axis-aligned geometry
+            const dx = 0.5773, dy = 0.5774, dz = 0.5776;
+            const EPS = 1e-9;
+            let crossings = 0;
+            for (let i = 0; i < triangles.length; i += 9) {
+                const ax = triangles[i], ay = triangles[i + 1], az = triangles[i + 2];
+                const e1x = triangles[i + 3] - ax, e1y = triangles[i + 4] - ay, e1z = triangles[i + 5] - az;
+                const e2x = triangles[i + 6] - ax, e2y = triangles[i + 7] - ay, e2z = triangles[i + 8] - az;
+                const hx = dy * e2z - dz * e2y, hy = dz * e2x - dx * e2z, hz = dx * e2y - dy * e2x;
+                const det = e1x * hx + e1y * hy + e1z * hz;
+                if (Math.abs(det) < EPS) continue;
+                const inv = 1 / det;
+                const sx = px - ax, sy = py - ay, sz = pz - az;
+                const u = inv * (sx * hx + sy * hy + sz * hz);
+                if (u < 0 || u > 1) continue;
+                const qx = sy * e1z - sz * e1y, qy = sz * e1x - sx * e1z, qz = sx * e1y - sy * e1x;
+                const v = inv * (dx * qx + dy * qy + dz * qz);
+                if (v < 0 || u + v > 1) continue;
+                const t = inv * (e2x * qx + e2y * qy + e2z * qz);
+                if (t > EPS) crossings++;
+            }
+            return (crossings % 2) === 1;
+        }
+
+        // True if any of the points (x, y, z, ...) inside the box is inside the mesh. Tests at most maxPoints points.
+        static anyPointInsideMesh(points, box, triangles, maxPoints = 500) {
+            const count = points.length / 3;
+            const step = Math.max(1, Math.ceil(count / maxPoints));
+            for (let i = 0; i < count; i += step) {
+                const x = points[i * 3], y = points[i * 3 + 1], z = points[i * 3 + 2];
+                if (x < box.min.x || x > box.max.x || y < box.min.y || y > box.max.y || z < box.min.z || z > box.max.z) continue;
+                if (RoomLocatorExtension.isPointInsideMesh(x, y, z, triangles)) return true;
+            }
+            return false;
         }
 
         async buildBBoxes() {
@@ -266,7 +195,10 @@
         }
 
         async locateElementByRoom(dbId) {
-            let bbox = await this.getBoundingBox(dbId, this.viewer.model);
+            const model = this.viewer.model;
+            let bbox = await this.getBoundingBox(dbId, model);
+            if (bbox.min.x > bbox.max.x) return []; // no geometry loaded for this element
+            const center = bbox.getCenter(new Autodesk.Viewing.Math.Vector3());
             const roomDbIds = Object.keys(this.cachedBBoxes['rooms']);
             const roomBoxes = Object.values(this.cachedBBoxes['rooms']);
 
@@ -279,53 +211,34 @@
                 if (roomBox.containsBox(bbox)) {
                     coarseResult.push(parseInt(roomDbId));
                 } else {
-                    if (roomBox.containsPoint(bbox.min) || roomBox.containsPoint(bbox.max) || roomBox.containsPoint(bbox.center())) {
+                    if (roomBox.containsPoint(bbox.min) || roomBox.containsPoint(bbox.max) || roomBox.containsPoint(center)) {
                         coarseResult.push(parseInt(roomDbId));
                     }
                 }
             }
 
-            // Fine Phase Collision
+            // Fine Phase Collision: the element is in a room if one of its vertices (or its center) is inside the room's mesh,
+            // or one of the room's vertices is inside the element's mesh (for elements larger than the room).
             const fineResult = [];
-            let elementCsgMesh = this.buildCsgMesh(dbId, this.viewer.model);
+            const element = await this.getWorldMesh(dbId, model);
+            const elementPoints = new Float64Array([center.x, center.y, center.z, ...element.vertices]);
 
             for (let i = 0; i < coarseResult.length; i++) {
                 let roomDbId = coarseResult[i];
-                let roomCsgMesh = this.buildCsgMesh(roomDbId, this.viewer.model);
+                const room = await this.getWorldMesh(roomDbId, model);
+                const roomBox = this.cachedBBoxes['rooms'][roomDbId];
 
-                let result = elementCsgMesh.bsp.intersect(roomCsgMesh.bsp);
-                if (result.tree.polygons.length <= 0) {
-                    result = roomCsgMesh.bsp.intersect(elementCsgMesh.bsp);
-
-                    // ====== Start ====== Uncomment here to draw intersected mesh ====== 
-                    // if (!this.viewer.overlays.hasScene('csg'))
-                    //     this.viewer.overlays.addScene('csg');
-                    // else
-                    //     this.viewer.overlays.clearScene('csg');
-
-                    // let mat = new THREE.MeshBasicMaterial({ color: 'red' })
-                    // let mesh = result.toMesh(mat);
-                    // this.viewer.overlays.addMesh(mesh, 'csg')
-                    // ====== End ====== Uncomment here to draw intersected mesh ====== 
-
-                    if (result.tree.polygons.length <= 0) continue;
+                if (RoomLocatorExtension.anyPointInsideMesh(elementPoints, roomBox, room.triangles) ||
+                    RoomLocatorExtension.anyPointInsideMesh(room.vertices, bbox, element.triangles)) {
+                    fineResult.push(roomDbId);
                 }
-
-                fineResult.push(roomDbId);
             }
 
             return fineResult;
         }
 
         async load() {
-            await Autodesk.Viewing.Private.theResourceLoader.loadScript(
-                'https://cdn.jsdelivr.net/gh/Wilt/ThreeCSG@develop/ThreeCSG.js',
-                'ThreeBSP'
-            );
-
-            if (!window.ThreeBSP)
-                throw new Error('Cannot load ThreeCSG.js, please download a copy from https://github.com/Wilt/ThreeCSG/blob/develop/ThreeCSG.js')
-
+            // Models stream in: wait until the geometry is loaded before reading room bounds
             await this.viewer.waitForLoadDone();
 
             this.cachedBBoxes = {};

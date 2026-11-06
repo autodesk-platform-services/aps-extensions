@@ -1,47 +1,41 @@
 
 // Model data in format for charts
 class ModelData {
-    constructor(viewer) {
+    constructor(model) {
         this._modelData = {};
-        this._viewer = viewer;
+        this._model = model;
     }
 
-    init(callback) {
-        var _this = this;
+    async init(callback) {
+        const dbIds = await this.getAllLeafComponents();
+        const results = await this._model.getBulkPropertiesAsync(dbIds, { propFilter: null });
+        results.forEach(({ dbId, properties }) => {
+            properties.forEach(prop => {
+                if (!isNaN(prop.displayValue)) return; // let's not categorize properties that store numbers
 
-        _this.getAllLeafComponents(function (dbIds) {
-            var count = dbIds.length;
-            dbIds.forEach(function (dbId) {
-                viewer.getProperties(dbId, function (props) {
-                    props.properties.forEach(function (prop) {
-                        if (!isNaN(prop.displayValue)) return; // let's not categorize properties that store numbers
+                // some adjustments for revit:
+                prop.displayValue = prop.displayValue.replace('Revit ', ''); // remove this Revit prefix
+                if (prop.displayValue.indexOf('<') == 0) return; // skip categories that start with <
 
-                        // some adjustments for revit:
-                        prop.displayValue = prop.displayValue.replace('Revit ', ''); // remove this Revit prefix
-                        if (prop.displayValue.indexOf('<') == 0) return; // skip categories that start with <
-
-                        // ok, now let's organize the data into this hash table
-                        if (_this._modelData[prop.displayName] == null) _this._modelData[prop.displayName] = {};
-                        if (_this._modelData[prop.displayName][prop.displayValue] == null) _this._modelData[prop.displayName][prop.displayValue] = [];
-                        _this._modelData[prop.displayName][prop.displayValue].push(dbId);
-                    })
-                    if ((--count) == 0) callback();
-                });
-            })
-        })
-    }
-
-    getAllLeafComponents(callback) {
-        // from https://learnforge.autodesk.io/#/viewer/extensions/panel?id=enumerate-leaf-nodes
-        viewer.getObjectTree(function (tree) {
-            var leaves = [];
-            tree.enumNodeChildren(tree.getRootId(), function (dbId) {
-                if (tree.getChildCount(dbId) === 0) {
-                    leaves.push(dbId);
-                }
-            }, true);
-            callback(leaves);
+                // ok, now let's organize the data into this hash table
+                if (this._modelData[prop.displayName] == null) this._modelData[prop.displayName] = {};
+                if (this._modelData[prop.displayName][prop.displayValue] == null) this._modelData[prop.displayName][prop.displayValue] = [];
+                this._modelData[prop.displayName][prop.displayValue].push(dbId);
+            });
         });
+        callback();
+    }
+
+    async getAllLeafComponents() {
+        // from https://learnforge.autodesk.io/#/viewer/extensions/panel?id=enumerate-leaf-nodes
+        const tree = await this._model.getObjectTreeAsync();
+        const leaves = [];
+        tree.enumNodeChildren(tree.getRootId(), (dbId) => {
+            if (tree.getChildCount(dbId) === 0) {
+                leaves.push(dbId);
+            }
+        }, true);
+        return leaves;
     }
 
     hasProperty(propertyName){

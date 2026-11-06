@@ -1,6 +1,7 @@
 {
     "displayName": "Potree Point Clouds",
-    "description": "Forge Viewer extension for loading and rendering Potree point clouds.",
+    "description": "Forge Viewer extension for loading and rendering Potree point clouds. Currently unavailable: it relies on three.js rendering, which Viewer v8 doesn't expose.",
+    "disabled": "Not supported in Viewer v8 yet",
     "options": {
         "url": "https://aps-extensions-sample-data.s3.us-west-2.amazonaws.com/PotreeExtension/lion_takanawa/cloud.js",
         "position": [

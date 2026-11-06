@@ -6,7 +6,6 @@
         "Autodesk.Viewing.FusionOrbit": false,
         "Autodesk.BimWalk": true,
         "Autodesk.Explode": true,
-        "Autodesk.FullScreen": true,
         "Autodesk.ModelStructure": true,
         "Autodesk.PropertiesManager": true,
         "Autodesk.Viewing.ZoomWindow": false,

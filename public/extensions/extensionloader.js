@@ -58,12 +58,16 @@ function init(config) {
     const inbuiltExtensions = Object.entries(config.builtInExtensions).map(([name, isDefaultOn]) => ({ name, isDefaultOn }));
     let currentViewer = null;
 
-    // One checkbox per extension. Disabled until a viewer exists to load the extension into.
+    // One checkbox per extension. Disabled until a viewer exists to load the extension into,
+    // and always disabled for extensions marked as disabled in their config.
     function createRow(extension, label, isDefaultOn, onToggle) {
+        const supported = !extension.disabled;
         const checkbox = el('input', { type: 'checkbox', name: extension.name, value: extension.name, disabled: true });
         checkbox.addEventListener('change', () => onToggle(checkbox.checked));
-        const row = el('div', { className: 'ext-row' }, el('label', {}, checkbox, label));
-        return { extension, checkbox, row, isDefaultOn };
+        const text = supported ? label : `${label} (unavailable)`;
+        const row = el('div', { className: 'ext-row' }, el('label', {}, checkbox, text));
+        if (typeof extension.disabled === 'string') row.title = extension.disabled;
+        return { extension, checkbox, row, isDefaultOn: isDefaultOn && supported, supported };
     }
 
     async function setCustomExtension(item, on) {
@@ -127,13 +131,13 @@ function init(config) {
     document.addEventListener('viewerinstance', e => {
         currentViewer = e.detail.viewer;
         for (const item of [...customItems, ...inbuiltItems]) {
-            item.checkbox.disabled = false;
+            item.checkbox.disabled = !item.supported;
             item.checkbox.checked = item.isDefaultOn;
         }
         customItems.filter(item => item.isDefaultOn).forEach(item => setCustomExtension(item, true));
         const requested = new URLSearchParams(window.location.search).get('extension');
         if (requested) {
-            const target = customItems.find(item => item.extension.name === requested);
+            const target = customItems.find(item => item.extension.name === requested && item.supported);
             if (target) target.checkbox.click();
         }
     });

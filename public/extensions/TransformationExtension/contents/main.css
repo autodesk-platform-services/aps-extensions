@@ -1,0 +1,44 @@
+/* Tip shown over the viewer while the transform tool is active */
+.transform-tool-hint {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: calc(100% - 24px);
+    padding: 6px 8px 6px 12px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font: 13px/1.4 sans-serif;
+    pointer-events: auto;
+}
+
+.transform-tool-hint kbd {
+    padding: 0 4px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 3px;
+    font: inherit;
+}
+
+.transform-tool-hint-close {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    color: inherit;
+    font-size: 16px;
+    line-height: 22px;
+    cursor: pointer;
+}
+
+.transform-tool-hint-close:hover,
+.transform-tool-hint-close:focus-visible {
+    background: rgba(255, 255, 255, 0.2);
+}

@@ -20,12 +20,14 @@ class TurnTableExtension extends Autodesk.Viewing.Extension {
     }
 
     load() {
-        if (this.viewer.model.getInstanceTree()) {
+        if (this.viewer.toolbar) {
             this.customize();
-        } else {
-            this.viewer.addEventListener(Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT, this.customize());
-        }        
+        }
         return true;
+    }
+
+    onToolbarCreated() {
+        this.customize();
     }
     
     unload() {
@@ -48,8 +50,10 @@ class TurnTableExtension extends Autodesk.Viewing.Extension {
     }
 
     customize() {
+        if (this._group) return;
 
         let viewer = this.viewer;
+        const avm = Autodesk.Viewing.Math;
 
         this._button = new Autodesk.Viewing.UI.Button('turnTableButton');
         this._button.addClass('toolbarCameraRotation');
@@ -67,23 +71,24 @@ class TurnTableExtension extends Autodesk.Viewing.Extension {
                 this.requestId = requestAnimationFrame(rotateCamera);
             }
 
+            // Camera properties are read-only in v8, so work on copies and apply them with setView
             const nav = viewer.navigation;
-            const pos = nav.getPosition();
-            const piv = nav.getPivotPoint();
-            const tar = nav.getTarget();
-            const up = nav.getCameraUpVector();
-            // determine the 'up' axis from the loaded model to apply matrix transformation
-            const upAxis = nav.getWorldUpVector();
-            const axis = new THREE.Vector3();
-            if (upAxis.z == 1) {
+            const pos = nav.getPosition().clone();
+            const piv = nav.getPivotPoint().clone();
+            const tar = nav.getTarget().clone();
+            const up = viewer.getCamera().up.clone();
+            // rotate around the world axis closest to the camera's up vector, to suit Z-up (e.g. Revit) and Y-up (e.g. Inventor) models
+            const axis = new avm.Vector3();
+            const [ax, ay, az] = [Math.abs(up.x), Math.abs(up.y), Math.abs(up.z)];
+            if (az >= ax && az >= ay) {
                 axis.set(0, 0, 1);
-            } else if (upAxis.y == 1) {
+            } else if (ay >= ax) {
                 axis.set(0, 1, 0);
             } else {
-                axis.set(1, 0, 0);                
-            };   
+                axis.set(1, 0, 0);
+            }
             const speed = 10.0 * Math.PI / 180;
-            const matrix = new THREE.Matrix4().makeRotationAxis(axis, speed * 0.1);
+            const matrix = new avm.Matrix4().makeRotationAxis(axis, speed * 0.1);
 
             // Rotate the camera position relative to the pivot
             pos.sub(piv); // Move the camera position relative to the pivot to (0,0,0)
@@ -93,11 +98,7 @@ class TurnTableExtension extends Autodesk.Viewing.Extension {
             tar.applyMatrix4(matrix); // Apply the rotation
             tar.add(piv); // Move the target position back to its original reference system of pivot()     
             up.applyMatrix4(matrix);
-            nav.setView(pos, tar);
-            nav.setCameraUpVector(up);
-            var viewState = viewer.getState();
-            // viewer.restoreState(viewState);
-
+            nav.setView(pos, tar, up);
         };
 
         this._button.onClick = function (e) {
