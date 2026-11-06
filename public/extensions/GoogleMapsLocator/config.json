@@ -1,19 +1,12 @@
 {
-    "displayname": "GoogleMapsLocator",
-    "description": "Show location of model on google maps.",
+    "displayName": "GoogleMapsLocator",
+    "description": "Show location of model on google maps. Requires a Google Maps API key, set it as \"apiKey\" in the options.",
     "options": {
-        "lattitude": 0,
+        "apiKey": "",
+        "latitude": 0,
         "longitude": 0
     },
-    "editoptions": true,
-    "externaldependencies": [
-        {
-            "type": "css",
-            "link": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
-        },
-        {
-            "type": "js",
-            "link": "https://maps.googleapis.com/maps/api/js?key=AIzaSyDBV72JOytVAAXlvey3kGB-XCu4S5XUxOs"
-        }
+    "dependencies": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
     ]
 }

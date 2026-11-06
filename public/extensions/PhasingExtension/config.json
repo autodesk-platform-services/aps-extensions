@@ -1,4 +1,4 @@
 {
-    "displayname": "Phasing Extension",
+    "displayName": "Phasing Extension",
     "description": "APS extension to generate Gantt chart connected with objects from the model"
 }

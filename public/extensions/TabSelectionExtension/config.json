@@ -1,5 +1,4 @@
 {
-    "displayname": "Tab selection",
-    "description": "Use TAB to rotate selection based on the model tree. For Revit files, it mimics the nested family selection.",
-    "bloglink": "https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions/TabSelectionExtension"
+    "displayName": "Tab selection",
+    "description": "Use TAB to rotate selection based on the model tree. For Revit files, it mimics the nested family selection."
 }

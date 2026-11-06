@@ -15,26 +15,23 @@ ExtensionName[Folder]
 2) Fill in `config.json`. Extensions are discovered from the folders on every request, so just refresh the page; no server restart is needed. Everything is optional and has a default:
 <pre>
 {
-    "displayname": "display name in the list (default: folder name)",
+    "displayName": "display name in the list (default: folder name)",
     "description": "description for the extension",
-    "options": {passed on to the extension constructor},
-    "editoptions": true (shows an Options button to edit "options" as JSON),
-    "loadonstartup": true (default: false),
-    "bloglink": "https link for a working explanation (optional)",
-    "externaldependencies": [
-        {"type": "js or css", "link": "URL or path of a library the extension needs"}
-    ],
-    "filestoload": {
-        "cssfiles": ["only if the default below is not right"],
-        "jsfiles": ["only if the default below is not right"]
-    }
+    "options": {passed on to the extension constructor; when set, an Options button lets users edit them as JSON},
+    "loadOnStartup": true (default: false),
+    "link": "https link for a working explanation (default: the extension's README.md on GitHub, if there is one)",
+    "dependencies": [
+        "https://cdn.example.com/library.min.js",
+        "libraries/helper.js",
+        {"url": "https://cdn.example.com/styles", "type": "css"}
+    ]
 }
 </pre>
-Derived from the folder when not set:
-- `filestoload`: the `.js` and `.css` files directly inside `contents/`, alphabetical with `main.*` last. Set it explicitly when the order matters or files live in subfolders (see XLSExtension, PotreeExtension).
-- `gif`: `extension.gif`, `.jpg`, `.jpeg` or `.png` in the extension folder, shown in the info popup.
+- `dependencies`: scripts and stylesheets the extension needs, in load order. Full URLs are loaded as they are, other paths are relative to the extension's `contents/` folder. The type (`js` or `css`) comes from the file name; use the `{"url", "type"}` form only when the URL doesn't end in `.js` or `.css`.
+- The extension's own `.js` and `.css` files directly inside `contents/` are always loaded after the dependencies, alphabetical with `main.*` last. To load one of them earlier, list it in `dependencies` (it won't be loaded twice).
+- A preview image named `extension.gif`, `.jpg`, `.jpeg` or `.png` in the extension folder is shown in the info popup.
 
-Files and `externaldependencies` are loaded the first time the extension is switched on. A folder with a broken `config.json` is skipped with a warning in the server log.
+Everything is loaded the first time the extension is switched on. A folder with a broken `config.json` is skipped with a warning in the server log.
 
 Example: [IconMarkupExtension config.json](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/config.json)
 

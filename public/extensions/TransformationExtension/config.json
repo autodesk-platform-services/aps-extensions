@@ -1,10 +1,7 @@
 {
-    "displayname": "Transformation",
+    "displayName": "Transformation",
     "description": "Pupose of this extension is to select an element and move or transform it in any direction.",
-    "externaldependencies": [
-        {
-            "type": "css",
-            "link": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
-        }
+    "dependencies": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"
     ]
 }

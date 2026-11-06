@@ -1,20 +1,25 @@
-/////////////////////////////////////////////////////////////////////
-// Copyright (c) Autodesk, Inc. All rights reserved
-// Written by APS Partner Development
-//
-// Permission to use, copy, modify, and distribute this software in
-// object code form for any purpose and without fee is hereby granted,
-// provided that the above copyright notice appears in all copies and
-// that both that copyright notice and the limited warranty and
-// restricted rights notice below appear in all supporting
-// documentation.
-//
-// AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS.
-// AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF
-// MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC.
-// DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
-// UNINTERRUPTED OR ERROR FREE.
-/////////////////////////////////////////////////////////////////////
+// *******************************************
+// Google Maps API, loaded on first use with the API key from the extension options
+// *******************************************
+var googleMapsPromise = null;
+function loadGoogleMaps(apiKey) {
+    if (window.google && window.google.maps) return Promise.resolve();
+    if (!apiKey) return Promise.reject(new Error('Set your Google Maps API key as "apiKey" in the extension options.'));
+    if (!googleMapsPromise) {
+        googleMapsPromise = new Promise(function (resolve, reject) {
+            var script = document.createElement('script');
+            script.src = 'https://maps.googleapis.com/maps/api/js?key=' + encodeURIComponent(apiKey);
+            script.onload = resolve;
+            script.onerror = function () {
+                googleMapsPromise = null;
+                script.remove();
+                reject(new Error('Could not load the Google Maps API.'));
+            };
+            document.head.appendChild(script);
+        });
+    }
+    return googleMapsPromise;
+}
 
 // *******************************************
 // MiniMap Extension
@@ -54,6 +59,10 @@ GoogleMapsLocator.prototype.onToolbarCreated = function () {
             alert('Model does not contain geo location information');
             return;
         }
+        if (!this.options.apiKey && !(window.google && window.google.maps)) {
+            alert('Set your Google Maps API key as "apiKey" in the extension options.');
+            return;
+        }
 
         this._enabled = !this._enabled;
         this._button.setState(this._enabled ? 0 : 1);
@@ -68,23 +77,24 @@ GoogleMapsLocator.prototype.onToolbarCreated = function () {
 
         if (!this._enabled) return;
 
-        // initialize the map
-        if (this.map == null) {
-            this.map = new google.maps.Map(document.getElementById('googlemap'), {
-                zoom: 16,
-                center: { lat: this.options.lattitude, lng: this.options.longitude },
-                mapTypeId: 'satellite',
-                rotateControl: false,
-                streetViewControl: false,
-                tilt: 0
-            });
-        }
+        loadGoogleMaps(this.options.apiKey).then(() => {
+            // initialize the map
+            if (this.map == null) {
+                this.map = new google.maps.Map(document.getElementById('googlemap'), {
+                    zoom: 16,
+                    center: { lat: this.options.latitude, lng: this.options.longitude },
+                    mapTypeId: 'satellite',
+                    rotateControl: false,
+                    streetViewControl: false,
+                    tilt: 0
+                });
+            }
 
-        // draw model boundoung box & center
-        var bb = this.viewer.model.getBoundingBox();
-        this.drawBoundingBox(bb.min, bb.max);
-        this.cameraChanged(this.viewer.autocam); // first run (center of the model)
-
+            // draw model boundoung box & center
+            var bb = this.viewer.model.getBoundingBox();
+            this.drawBoundingBox(bb.min, bb.max);
+            this.cameraChanged(this.viewer.autocam); // first run (center of the model)
+        }).catch(err => alert(err.message));
     };
     this._button.setToolTip('Show map location');
     this._button.container.children[0].classList.add('fas', 'fa-map-marked');

@@ -1,4 +1,4 @@
 {
-    "displayname": "Camera Rotation",
+    "displayName": "Camera Rotation",
     "description": "Rotates the model continously untill stopped, can be used for demoing a large model."
 }

@@ -1,5 +1,5 @@
 {
-    "displayname": "Viewer in Viewer",
+    "displayName": "Viewer in Viewer",
     "description": "Nested viewer where viewables related to the currently loaded model can be viewed.",
     "options": {
         "filter": [
@@ -7,7 +7,5 @@
             "3d"
         ],
         "crossSelection": true
-    },
-    "editoptions": true,
-    "bloglink": "https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions/NestedViewerExtension/README.md"
+    }
 }

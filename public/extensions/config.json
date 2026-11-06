@@ -1,143 +1,20 @@
 {
-    "InbuiltExtensions": [
-        {
-            "name": "Autodesk.Fusion360.Animation",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Section",
-            "default": true
-        },
-        {
-            "name": "Autodesk.DefaultTools.NavTools",
-            "default": true
-        },
-        {
-            "name": "Autodesk.Hyperlink",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Measure",
-            "default": true
-        },
-        {
-            "name": "Autodesk.Viewing.FusionOrbit",
-            "default": false
-        },
-        {
-            "name": "Autodesk.BimWalk",
-            "default": true
-        },
-        {
-            "name": "Autodesk.GoHome",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Explode",
-            "default": true
-        },
-        {
-            "name": "Autodesk.FullScreen",
-            "default": true
-        },
-        {
-            "name": "Autodesk.LayerManager",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.ModelStructure",
-            "default": true
-        },
-        {
-            "name": "Autodesk.PropertiesManager",
-            "default": true
-        },
-        {
-            "name": "Autodesk.ViewerSettings",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Viewing.Wireframes",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Viewing.ZoomWindow",
-            "default": false
-        },
-        {
-            "name": "Autodesk.SplitScreen",
-            "default": false
-        },
-        {
-            "name": "Autodesk.PDF",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.DocumentBrowser",
-            "default": false
-        },
-        {
-            "name": "Autodesk.Geolocation",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.CrossFadeEffects",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Edit2D",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.ViewCubeUi",
-            "default": true
-        },
-        {
-            "name": "Autodesk.BIM360.Minimap",
-            "default": false
-        },
-        {
-            "name": "Autodesk.BIM360.GestureDocumentNavigation",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.BIM360.RollCamera",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Viewing.SceneBuilder",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.Snapping",
-            "default": false
-        },
-        {
-            "name": "Autodesk.Viewing.Popout",
-            "default": false,
-            "includeinlist": false
-        },
-        {
-            "name": "Autodesk.VisualClusters",
-            "default": false
-        },
-        {
-            "name": "Autodesk.AEC.LevelsExtension",
-            "default": false,
-            "includeinlist": false
-        }
-    ]
+    "builtInExtensions": {
+        "Autodesk.Section": true,
+        "Autodesk.DefaultTools.NavTools": true,
+        "Autodesk.Measure": true,
+        "Autodesk.Viewing.FusionOrbit": false,
+        "Autodesk.BimWalk": true,
+        "Autodesk.Explode": true,
+        "Autodesk.FullScreen": true,
+        "Autodesk.ModelStructure": true,
+        "Autodesk.PropertiesManager": true,
+        "Autodesk.Viewing.ZoomWindow": false,
+        "Autodesk.SplitScreen": false,
+        "Autodesk.DocumentBrowser": false,
+        "Autodesk.ViewCubeUi": true,
+        "Autodesk.BIM360.Minimap": false,
+        "Autodesk.Snapping": false,
+        "Autodesk.VisualClusters": false
+    }
 }

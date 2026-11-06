@@ -1,6 +1,8 @@
 const CUSTOM_LIST_ID = 'extensionlist';
 const INBUILT_LIST_ID = 'inbuiltextensionlist';
 
+const isHttps = url => /^https:\/\//.test(url || '');
+
 function el(tag, props = {}, ...children) {
     const node = Object.assign(document.createElement(tag), props);
     node.append(...children);
@@ -24,17 +26,14 @@ function loadResource(type, url) {
     return resources.get(url);
 }
 
-// Loads an extension's dependencies and its own files the first time it is needed.
-// Scripts are loaded one after the other so that they keep their declared order.
+// Loads an extension's dependencies (which include its own files) the first time it is needed.
+// Stylesheets load in parallel; scripts load one after the other so that they keep their declared order.
 function loadExtensionFiles(extension) {
     if (!extension.ready) {
         extension.ready = (async () => {
-            const path = 'extensions/' + extension.name + '/contents/';
-            const dependencies = extension.externaldependencies || [];
-            await Promise.all(dependencies.filter(d => d.type === 'css').map(d => loadResource('css', d.link)));
-            for (const d of dependencies.filter(d => d.type === 'js')) await loadResource('js', d.link);
-            await Promise.all(extension.filestoload.cssfiles.map(file => loadResource('css', path + file)));
-            for (const file of extension.filestoload.jsfiles) await loadResource('js', path + file);
+            const { dependencies } = extension;
+            await Promise.all(dependencies.filter(d => d.type === 'css').map(d => loadResource('css', d.url)));
+            for (const d of dependencies.filter(d => d.type === 'js')) await loadResource('js', d.url);
         })();
         extension.ready.catch(() => { extension.ready = null; });
     }
@@ -55,8 +54,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function init(config) {
-    const customExtensions = config.Extensions.filter(extension => extension.includeinlist);
-    const inbuiltExtensions = config.InbuiltExtensions.filter(extension => extension.includeinlist !== false);
+    const customExtensions = config.extensions.filter(extension => extension.includeInList);
+    const inbuiltExtensions = Object.entries(config.builtInExtensions).map(([name, isDefaultOn]) => ({ name, isDefaultOn }));
     let currentViewer = null;
 
     // One checkbox per extension. Disabled until a viewer exists to load the extension into.
@@ -82,20 +81,20 @@ function init(config) {
     }
 
     const customItems = customExtensions.map(extension => {
-        const item = createRow(extension, extension.displayname, extension.loadonstartup, on => setCustomExtension(item, on));
+        const item = createRow(extension, extension.displayName, extension.loadOnStartup, on => setCustomExtension(item, on));
 
         const details = el('div', { className: 'ext-details', hidden: true }, el('p', {}, extension.description));
-        if (/^https:\/\//.test(extension.bloglink || '')) {
-            details.append(el('a', { href: extension.bloglink, target: '_blank', rel: 'noopener', textContent: 'Learn more' }));
+        if (isHttps(extension.link)) {
+            details.append(el('a', { href: extension.link, target: '_blank', rel: 'noopener', textContent: 'Learn more' }));
         }
-        if (extension.gif) {
+        if (extension.preview) {
             details.append(el('img', {
-                src: 'extensions/' + extension.name + '/' + extension.gif,
-                alt: extension.displayname + ' sample',
+                src: 'extensions/' + extension.name + '/' + extension.preview,
+                alt: extension.displayName + ' sample',
                 loading: 'lazy'
             }));
         }
-        const infoButton = el('button', { type: 'button', className: 'icon-button info-button', textContent: 'i', title: 'About ' + extension.displayname });
+        const infoButton = el('button', { type: 'button', className: 'icon-button info-button', textContent: 'i', title: 'About ' + extension.displayName });
         infoButton.setAttribute('aria-expanded', 'false');
         infoButton.addEventListener('click', () => {
             details.hidden = !details.hidden;
@@ -103,8 +102,8 @@ function init(config) {
         });
         item.row.append(infoButton);
 
-        if (extension.editoptions) {
-            const editButton = el('button', { type: 'button', className: 'text-button', textContent: 'Options', title: 'Edit options of ' + extension.displayname });
+        if (extension.editable) {
+            const editButton = el('button', { type: 'button', className: 'text-button', textContent: 'Options', title: 'Edit options of ' + extension.displayName });
             editButton.addEventListener('click', () => openEditDialog(item));
             item.row.append(editButton);
         }
@@ -113,7 +112,7 @@ function init(config) {
     });
 
     const inbuiltItems = inbuiltExtensions.map(extension => {
-        const item = createRow(extension, extension.name.slice('Autodesk.'.length), extension.default, on => {
+        const item = createRow(extension, extension.name.slice('Autodesk.'.length), extension.isDefaultOn, on => {
             if (on) currentViewer.loadExtension(extension.name);
             else currentViewer.unloadExtension(extension.name);
         });
@@ -149,8 +148,8 @@ function init(config) {
         editItem = item;
         textarea.value = JSON.stringify(item.extension.options, undefined, 2);
         const link = document.getElementById('learnmore');
-        link.hidden = !/^https:\/\//.test(item.extension.bloglink || '');
-        link.href = item.extension.bloglink || '#';
+        link.hidden = !isHttps(item.extension.link);
+        link.href = item.extension.link || '#';
         errorBox.hidden = true;
         dialog.showModal();
     }

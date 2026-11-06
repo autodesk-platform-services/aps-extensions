@@ -1,5 +1,5 @@
 {
-    "displayname": "Custom Properties",
+    "displayName": "Custom Properties",
     "description": "Custom Properties example, info provided in config is showed in Properties palette based on selected object's dbId.",
     "options": {
         "properties": {
@@ -15,7 +15,5 @@
                 }
             }
         }
-    },
-    "editoptions": true,
-    "bloglink": "https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/CustomPropertiesExtension"
+    }
 }

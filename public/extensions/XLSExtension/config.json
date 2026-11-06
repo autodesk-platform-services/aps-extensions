@@ -1,40 +1,12 @@
 {
-    "displayname": "XLS Extension",
+    "displayName": "XLS Extension",
     "description": "Download properties in excel file.",
-    "externaldependencies": [
-        {
-            "type": "js",
-            "link": "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-        },
-        {
-            "type": "js",
-            "link": "extensions/XLSExtension/contents/libraries/Blob.js"
-        },
-        {
-            "type": "js",
-            "link": "extensions/XLSExtension/contents/libraries/FileSaver.min.js"
-        },
-        {
-            "type": "js",
-            "link": "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js"
-        },
-        {
-            "type": "js",
-            "link": "extensions/XLSExtension/contents/libraries/notify.min.js"
-        },
-        {
-            "type": "js",
-            "link": "extensions/XLSExtension/contents/libraries/clipboard.min.js"
-        }
-    ],
-    "filestoload": {
-        "cssfiles": [
-            "main.css"
-        ],
-        "jsfiles": [
-            "main.js",
-            "ForgeXLS.js",
-            "modeldata.js"
-        ]
-    }
+    "dependencies": [
+        "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js",
+        "libraries/Blob.js",
+        "libraries/FileSaver.min.js",
+        "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js",
+        "libraries/notify.min.js",
+        "libraries/clipboard.min.js"
+    ]
 }

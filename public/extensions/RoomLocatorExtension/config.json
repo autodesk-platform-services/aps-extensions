@@ -1,9 +1,8 @@
 {
-    "displayname": "Room Locator",
+    "displayName": "Room Locator",
     "description": "A APS Viewer extension for finding the room where the selected object is located",
     "options": {
         "alertOnDefaultFailure": true,
         "autoUnloadOnNoAecModelData": true
-    },
-    "editoptions": true
+    }
 }

@@ -1,4 +1,4 @@
 {
-    "displayname": "Bounding Box",
+    "displayName": "Bounding Box",
     "description": "Purpose of this extension is to draw a bounding box around each selected object."
 }

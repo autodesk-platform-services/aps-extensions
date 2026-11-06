@@ -1,6 +1,5 @@
 {
-    "displayname": "Draw Tool",
+    "displayName": "Draw Tool",
     "description": "A simple tool that will allow us to draw boxes and spheres.",
-    "editoptions": true,
-    "bloglink": "https://forge.autodesk.com/blog/custom-tools-forge-viewer"
+    "link": "https://forge.autodesk.com/blog/custom-tools-forge-viewer"
 }
