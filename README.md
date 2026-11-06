@@ -27,7 +27,7 @@ This sample is a collection of extensions ready to be reused. Just add reference
 8. [Edit2D Extension](public/extensions/Edit2dExtension)
 9. [Phasing Extension](public/extensions/PhasingExtension)
 
-Extensions were created using a [Basic Skeleton](public/extensions/BasicSkeleton).
+Extensions were created using a [Basic Skeleton](public/extensions/_BasicSkeleton).
 
 This sample is based on the [Learn APS](http://learnforge.autodesk.io) tutorials in the section *View modelss*.
 
@@ -77,74 +77,9 @@ The app does not upload files. Upload and translate your test designs into the `
 
 Open the browser: [http://localhost:3000](http://localhost:3000).
 
-# Steps to plug in new extension
+# Adding a new extension
 
-1) Create folder in public/extensions with same name as extension name.
-Structure of the extension folder is as shown below:
-<pre>
-ExtensionName[Folder]
-        | 
-        |->contents
-        |     |
-        |     |->main.js
-        |     |->main.css
-        |     |->assets[folder]
-        |->config.json
-</pre>        
-Refer the [BasicSkeleton Extension](https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/BasicSkeleton) for boilerplate code.
-
-2) Each extension folder should be self-contained code, so that it's easily shareable between projects.
-Extension[Folder]/config.json is meant for keeping the config of an extension and for sharing.
-
-Extension config schema:
-<pre>
-{
-    "name":"extension name registered",
-    "displayname": "display name for the extension in list",
-    "description": "description for the extension",
-    "options":{model specific information array to pass on to extension constructor},
-    "viewerversion":"viewer version",
-    "loadonstartup": true or false,
-    "filestoload":{
-        "cssfiles":["css file(s)"],
-        "jsfiles":["js file(s)"]
-    },
-    "bloglink":"Blog link for working explanation of the extension (optional, https only)",
-    "includeinlist": true or false,
-    "editoptions": true or false (optional, shows an Options button to edit "options" as JSON),
-    "externaldependencies":[
-        {"type": "js or css", "link": "URL or path of a library the extension needs (optional)"}
-    ]
-}
-</pre>
-The extension files and `externaldependencies` are loaded the first time the extension is switched on, in the order listed.
-
-Example: [IconMarkupExtension config.json](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/config.json)
-
-> Note: If your extension relies on event Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT to load, in load function check if the data is already loaded, if not only then add the event listener, below code shows the structure.
-<pre>
-class MyExtension extends Autodesk.Viewing.Extension {
-    ...
-    load() {
-        ...
-        if (this.viewer.model.getInstanceTree()) {
-            this.onTreeReady();
-        } else {
-            this.viewer.addEventListener(Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT, this.onTreeReady.bind(this));
-        }
-        ...
-    }
-    ...
-    onTreeReady() {
-        const tree = this.viewer.model.getInstanceTree();
-        ...
-    }
-    ...
-}
-</pre>
-Example: [IconMarkupExtension load function](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/contents/main.js#L26)
-
-> Note: After the new extension is added, please restart the server.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 # Understanding extensionloader and using it in aps app
 

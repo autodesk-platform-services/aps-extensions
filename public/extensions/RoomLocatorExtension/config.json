@@ -1,22 +1,9 @@
 {
-    "name": "RoomLocatorExtension",
     "displayname": "Room Locator",
     "description": "A APS Viewer extension for finding the room where the selected object is located",
     "options": {
         "alertOnDefaultFailure": true,
         "autoUnloadOnNoAecModelData": true
     },
-    "editoptions":true,
-    "viewerversion": "7.*",
-    "loadonstartup": false,
-    "filestoload": {
-        "cssfiles": [],
-        "jsfiles": [
-            "main.js"
-        ]
-    },
-    "bloglink": "",
-    "includeinlist": true,
-    "gif": "extension.gif",
-    "externaldependencies": []
+    "editoptions": true
 }

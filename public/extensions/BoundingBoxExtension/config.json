@@ -1,14 +1,4 @@
 {
-    "name":"BoundingBoxExtension",
     "displayname": "Bounding Box",
-    "description": "Purpose of this extension is to draw a bounding box around each selected object.",
-    "options":{},
-    "viewerversion":"7.*",
-    "loadonstartup": false,
-    "filestoload":{
-        "cssfiles":["main.css"],
-        "jsfiles":["main.js"]
-    },
-     "gif": "extension.gif",
-    "includeinlist":true
+    "description": "Purpose of this extension is to draw a bounding box around each selected object."
 }

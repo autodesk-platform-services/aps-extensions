@@ -1,8 +1,7 @@
 {
-    "name":"CustomPropertiesExtension",
     "displayname": "Custom Properties",
     "description": "Custom Properties example, info provided in config is showed in Properties palette based on selected object's dbId.",
-    "options":{
+    "options": {
         "properties": {
             "1": {
                 "My Group": {
@@ -17,15 +16,6 @@
             }
         }
     },
-    "editoptions":true,
-    "viewerversion":"7.*",
-    "loadonstartup": false,
-    "filestoload":{
-        "cssfiles":[],
-        "jsfiles":["main.js"]
-    },
-    "bloglink":"https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/CustomPropertiesExtension",
-    "includeinlist":true,
-    "gif": "extension.gif",
-    "externaldependencies":[]    
+    "editoptions": true,
+    "bloglink": "https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/CustomPropertiesExtension"
 }

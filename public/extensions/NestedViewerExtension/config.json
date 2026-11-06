@@ -1,19 +1,13 @@
 {
-    "name": "NestedViewerExtension",
     "displayname": "Viewer in Viewer",
     "description": "Nested viewer where viewables related to the currently loaded model can be viewed.",
     "options": {
-        "filter": ["2d", "3d"],
+        "filter": [
+            "2d",
+            "3d"
+        ],
         "crossSelection": true
     },
-    "editoptions":true,
-    "viewerversion": "7.*",
-    "loadonstartup": false,
-    "filestoload": {
-        "cssfiles": ["main.css"],
-        "jsfiles": ["main.js"]
-    },
-    "gif": "extension.gif",
-    "includeinlist": true,
+    "editoptions": true,
     "bloglink": "https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions/NestedViewerExtension/README.md"
 }

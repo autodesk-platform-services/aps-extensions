@@ -1,0 +1,62 @@
+# Contributing
+
+## Adding a new extension
+
+1) Copy the [_BasicSkeleton](https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/_BasicSkeleton) folder in public/extensions and rename it to the name of the extension (the folder name is the name the extension is registered with in the viewer). Folders starting with `_` are not shown in the list.
+<pre>
+ExtensionName[Folder]
+        |
+        |->contents
+        |     |->main.js
+        |     |->main.css
+        |->config.json (optional)
+</pre>
+
+2) Fill in `config.json`. Extensions are discovered from the folders on every request, so just refresh the page; no server restart is needed. Everything is optional and has a default:
+<pre>
+{
+    "displayname": "display name in the list (default: folder name)",
+    "description": "description for the extension",
+    "options": {passed on to the extension constructor},
+    "editoptions": true (shows an Options button to edit "options" as JSON),
+    "loadonstartup": true (default: false),
+    "bloglink": "https link for a working explanation (optional)",
+    "externaldependencies": [
+        {"type": "js or css", "link": "URL or path of a library the extension needs"}
+    ],
+    "filestoload": {
+        "cssfiles": ["only if the default below is not right"],
+        "jsfiles": ["only if the default below is not right"]
+    }
+}
+</pre>
+Derived from the folder when not set:
+- `filestoload`: the `.js` and `.css` files directly inside `contents/`, alphabetical with `main.*` last. Set it explicitly when the order matters or files live in subfolders (see XLSExtension, PotreeExtension).
+- `gif`: `extension.gif`, `.jpg`, `.jpeg` or `.png` in the extension folder, shown in the info popup.
+
+Files and `externaldependencies` are loaded the first time the extension is switched on. A folder with a broken `config.json` is skipped with a warning in the server log.
+
+Example: [IconMarkupExtension config.json](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/config.json)
+
+> Note: If your extension relies on event Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT to load, in load function check if the data is already loaded, if not only then add the event listener, below code shows the structure.
+<pre>
+class MyExtension extends Autodesk.Viewing.Extension {
+    ...
+    load() {
+        ...
+        if (this.viewer.model.getInstanceTree()) {
+            this.onTreeReady();
+        } else {
+            this.viewer.addEventListener(Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT, this.onTreeReady.bind(this));
+        }
+        ...
+    }
+    ...
+    onTreeReady() {
+        const tree = this.viewer.model.getInstanceTree();
+        ...
+    }
+    ...
+}
+</pre>
+Example: [IconMarkupExtension load function](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/contents/main.js#L26)

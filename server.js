@@ -5,12 +5,11 @@ const { PORT } = require('./config.js');
 const { getPublicToken, listObjects } = require('./aps.js');
 const { loadExtensionsConfig } = require('./extensions.js');
 
-const extensionsConfig = loadExtensionsConfig();
-
 const app = express();
 // Viewer pages rely on inline scripts, third-party CDNs and blob/worker URLs, so CSP is left to be tuned separately.
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
-app.get('/extensions/config.json', (req, res) => res.json(extensionsConfig));
+// Discovered from the extension folders on every request, so new extensions appear on a page refresh.
+app.get('/extensions/config.json', (req, res) => res.json(loadExtensionsConfig()));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/auth/token', async (req, res) => {
