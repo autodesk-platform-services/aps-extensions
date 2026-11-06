@@ -6,14 +6,14 @@
         "filter": ["2d", "3d"],
         "crossSelection": true
     },
-    "editoptions":"true",
+    "editoptions":true,
     "viewerversion": "7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload": {
         "cssfiles": ["main.css"],
         "jsfiles": ["main.js"]
     },
     "gif": "extension.gif",
-    "includeinlist": "true",
+    "includeinlist": true,
     "bloglink": "https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions/NestedViewerExtension/README.md"
 }

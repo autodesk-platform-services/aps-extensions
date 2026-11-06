@@ -1,19 +1,19 @@
 {
-  "name": "forgeextensions",
+  "name": "aps-extensions",
   "version": "1.0.0",
   "description": "Sample application for learnforge.autodesk.io.",
-  "main": "start.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node start.js"
+    "start": "node --env-file-if-exists=.env server.js"
+  },
+  "engines": {
+    "node": ">=22.9"
   },
   "license": "MIT",
   "dependencies": {
-    "@aps_sdk/authentication": "^0.1.0-beta.1",
-    "@aps_sdk/autodesk-sdkmanager": "^0.0.7-beta.1",
-    "@aps_sdk/model-derivative": "^0.1.0-beta.1",
-    "@aps_sdk/oss": "^0.1.0-beta.1",
-    "express": "^4.18.1",
-    "express-formidable": "^1.2.0",
-    "formidable": "^2.0.1"
+    "@aps_sdk/authentication": "^1.0.1",
+    "@aps_sdk/oss": "^1.3.3",
+    "express": "^5.2.0",
+    "helmet": "^8.0.0"
   }
 }

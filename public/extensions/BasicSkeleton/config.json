@@ -4,10 +4,10 @@
     "description": "Basic Skeleton of an extension, can be used as boilerplate code.",
     "options":{},
     "viewerversion":"7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload":{
         "cssfiles":["main.css"],
         "jsfiles":["main.js"]
     },
-    "includeinlist":"false"
+    "includeinlist":false
 }

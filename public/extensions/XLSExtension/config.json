@@ -4,16 +4,19 @@
     "description": "Download properties in excel file.",
     "options":{},
     "viewerversion":"7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload":{
         "cssfiles":["main.css"],
         "jsfiles":["main.js","ForgeXLS.js","modeldata.js"]
     },
-    "includeinlist":"true",
+    "includeinlist":true,
     "gif": "extension.jpg",
     "externaldependencies":[
-        {"type": "js", "link": "https://github.com/eligrey/Blob.js"},
-        {"type": "js", "link": "https://github.com/eligrey/FileSaver.js"},
-        {"type": "js", "link": "https://github.com/SheetJS/js-xlsx"}
+        {"type": "js", "link": "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"},
+        {"type": "js", "link": "extensions/XLSExtension/contents/libraries/Blob.js"},
+        {"type": "js", "link": "extensions/XLSExtension/contents/libraries/FileSaver.min.js"},
+        {"type": "js", "link": "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js"},
+        {"type": "js", "link": "extensions/XLSExtension/contents/libraries/notify.min.js"},
+        {"type": "js", "link": "extensions/XLSExtension/contents/libraries/clipboard.min.js"}
     ]
 }

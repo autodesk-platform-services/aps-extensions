@@ -13,17 +13,18 @@
             "tooltip": "Show Temperature"
         }
     },
-    "editoptions":"true",
+    "editoptions":true,
     "viewerversion":"7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload":{
         "cssfiles":["main.css"],
         "jsfiles":["main.js"]
     },
     "bloglink":"https://github.com/autodesk-forge/forge-extensions/tree/master/public/extensions/IconMarkupExtension",
-    "includeinlist":"true",
+    "includeinlist":true,
     "gif": "extension.gif",
     "externaldependencies":[
+        {"type": "js", "link": "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"},
         {"type": "css", "link": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"}
     ]
         

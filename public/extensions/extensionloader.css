@@ -1,7 +1,11 @@
-#extensionlist{padding: 10px 0px;}
-.tobegin{position: absolute;font-size: 20px;opacity: 0.5;top: 15%;left: 5%;}
-.extensions-heading{margin-top: 0;}
-.popover{min-width: 520px !important;max-width: 520px !important;}
-#editextensionconfig{height: 200px;}
-#learnmore{float: left;}
-#saveconfig{background: #5cb85c;color: white;}
+.ext { padding: 4px 0; }
+.ext-row { display: flex; align-items: center; gap: 4px; }
+.ext-row label { flex: 1; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.ext-row label:has(input:disabled) { cursor: default; color: var(--muted); }
+.info-button { flex: none; border: 1px solid currentColor; border-radius: 50%; width: 18px; height: 18px; font: italic 600 12px/1 Georgia, serif; }
+.text-button { flex: none; border: 0; background: none; color: var(--accent); padding: 2px 4px; }
+.text-button:hover { text-decoration: underline; }
+.ext-details { margin: 4px 0 8px 24px; padding: 8px 10px; border-left: 3px solid var(--border); color: var(--muted); }
+.ext-details p { margin: 0 0 6px; }
+.ext-details img { display: block; width: 100%; margin-top: 8px; border-radius: 6px; }
+.ext-details[hidden] { display: none; }

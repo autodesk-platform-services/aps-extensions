@@ -3,17 +3,17 @@
     "displayname": "GoogleMapsLocator",
     "description": "Show location of model on google maps.",
     "options":{"lattitude":0,"longitude":0},
-    "editoptions":"true",
+    "editoptions":true,
     "viewerversion":"7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload":{
         "cssfiles":["main.css"],
         "jsfiles":["main.js"]
     },
-    "includeinlist":"true",
+    "includeinlist":true,
     "gif": "extension.gif",
     "externaldependencies":[
         {"type": "css", "link": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css"},
-        {"type": "js", "link": "https://maps.googleapis.com/maps/api/js?key=<Google Maps API Key>"}
+        {"type": "js", "link": "https://maps.googleapis.com/maps/api/js?key=AIzaSyDBV72JOytVAAXlvey3kGB-XCu4S5XUxOs"}
     ]
 }

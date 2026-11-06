@@ -3,11 +3,11 @@
     "displayname": "Camera Rotation",
     "description":"Rotates the model continously untill stopped, can be used for demoing a large model.",
     "options":{},
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload":{
         "cssfiles":["main.css"],
         "jsfiles":["main.js"]
     },
     "gif": "extension.gif",
-    "includeinlist":"true"
+    "includeinlist":true
 }

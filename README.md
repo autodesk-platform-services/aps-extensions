@@ -60,6 +60,7 @@ Mac OSX/Linux (Terminal)
     npm install
     export APS_CLIENT_ID=<<YOUR CLIENT ID FROM DEVELOPER PORTAL>>
     export APS_CLIENT_SECRET=<<YOUR CLIENT SECRET>>
+    export APS_BUCKET=<<KEY OF THE OSS BUCKET WITH YOUR TRANSLATED DESIGNS>>
     npm start
 
 Windows (use **Node.js command line** from the Start menu)
@@ -67,7 +68,12 @@ Windows (use **Node.js command line** from the Start menu)
     npm install
     set APS_CLIENT_ID=<<YOUR CLIENT ID FROM DEVELOPER PORTAL>>
     set APS_CLIENT_SECRET=<<YOUR CLIENT SECRET>>
+    set APS_BUCKET=<<KEY OF THE OSS BUCKET WITH YOUR TRANSLATED DESIGNS>>
     npm start
+
+Alternatively, put the variables in a `.env` file in the project folder. `npm start` loads it automatically if it exists (requires Node.js 22.9 or later).
+
+The app does not upload files. Upload and translate your test designs into the `APS_BUCKET` bucket separately, and they will be listed in the app.
 
 Open the browser: [http://localhost:3000](http://localhost:3000).
 
@@ -98,15 +104,21 @@ Extension config schema:
     "description": "description for the extension",
     "options":{model specific information array to pass on to extension constructor},
     "viewerversion":"viewer version",
-    "loadonstartup": "true or false",
+    "loadonstartup": true or false,
     "filestoload":{
         "cssfiles":["css file(s)"],
         "jsfiles":["js file(s)"]
     },
-    "bloglink":"Blog link for working explanation of the extension (optional)",
-    "includeinlist":"true or false"
+    "bloglink":"Blog link for working explanation of the extension (optional, https only)",
+    "includeinlist": true or false,
+    "editoptions": true or false (optional, shows an Options button to edit "options" as JSON),
+    "externaldependencies":[
+        {"type": "js or css", "link": "URL or path of a library the extension needs (optional)"}
+    ]
 }
 </pre>
+The extension files and `externaldependencies` are loaded the first time the extension is switched on, in the order listed.
+
 Example: [IconMarkupExtension config.json](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/extensions/IconMarkupExtension/config.json)
 
 > Note: If your extension relies on event Autodesk.Viewing.OBJECT_TREE_CREATED_EVENT to load, in load function check if the data is already loaded, if not only then add the event listener, below code shows the structure.
@@ -145,7 +157,7 @@ The way loose coupling between extensions and aps app is achived is with custom 
 <script src="/extensions/extensionloader.js"></script>
 </pre>
 
-3) Here's the linking part between the app and the extensionloader, in viewer [onDocumentLoadSuccess](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/js/ApsViewer.js#L35) function, emit an event to inform the extensionloader that viewer has loaded the model with the below [code](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/js/ApsViewer.js#L39):
+3) Here's the linking part between the app and the extensionloader, in viewer [onDocumentLoadSuccess](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/js/viewer.js#L35) function, emit an event to inform the extensionloader that viewer has loaded the model with the below [code](https://github.com/autodesk-platform-services/aps-extensions/blob/main/public/js/viewer.js#L39):
 <pre>
 var ViewerInstance = new CustomEvent("viewerinstance", {detail: {viewer: viewer}});      
 document.dispatchEvent(ViewerInstance);

@@ -3,14 +3,14 @@
     "displayname": "Draw Tool",
     "description": "A simple tool that will allow us to draw boxes and spheres.",
     "options":{},
-    "editoptions":"true",
+    "editoptions":true,
     "viewerversion":"7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload":{
         "cssfiles":["main.css"],
         "jsfiles":["main.js"]
     },
     "bloglink":"https://forge.autodesk.com/blog/custom-tools-forge-viewer",
-    "includeinlist":"true",
+    "includeinlist":true,
     "gif": "extension.gif"
 }

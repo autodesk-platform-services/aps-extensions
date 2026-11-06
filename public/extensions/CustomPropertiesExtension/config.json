@@ -17,15 +17,15 @@
             }
         }
     },
-    "editoptions":"true",
+    "editoptions":true,
     "viewerversion":"7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload":{
         "cssfiles":[],
         "jsfiles":["main.js"]
     },
     "bloglink":"https://github.com/autodesk-platform-services/aps-extensions/tree/main/public/extensions/CustomPropertiesExtension",
-    "includeinlist":"true",
+    "includeinlist":true,
     "gif": "extension.gif",
     "externaldependencies":[]    
 }

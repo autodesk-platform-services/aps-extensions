@@ -7,9 +7,9 @@
         "position": [0.0, 0.0, 0.0],
         "scale": [5.0, 5.0, 5.0]
     },
-    "editoptions": "true",
+    "editoptions": true,
     "viewerversion": "7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload": {
         "cssfiles": [],
         "jsfiles": [
@@ -18,6 +18,6 @@
         ]
     },
     "gif": "extension.gif",
-    "includeinlist": "true",
+    "includeinlist": true,
     "bloglink": ""
 }

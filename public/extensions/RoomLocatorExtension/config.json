@@ -6,9 +6,9 @@
         "alertOnDefaultFailure": true,
         "autoUnloadOnNoAecModelData": true
     },
-    "editoptions":"true",
+    "editoptions":true,
     "viewerversion": "7.*",
-    "loadonstartup": "false",
+    "loadonstartup": false,
     "filestoload": {
         "cssfiles": [],
         "jsfiles": [
@@ -16,12 +16,7 @@
         ]
     },
     "bloglink": "",
-    "includeinlist": "true",
+    "includeinlist": true,
     "gif": "extension.gif",
-    "externaldependencies": [
-        {
-            "type": "js",
-            "link": "https://cdn.jsdelivr.net/gh/Wilt/ThreeCSG@develop/ThreeCSG.js"
-        }
-    ]
+    "externaldependencies": []
 }
