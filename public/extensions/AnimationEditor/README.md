@@ -33,10 +33,9 @@ Elements inside another animated element in the object tree (for example, a fami
 
 ## Setup
 
-Include [Theatre.js](https://www.jsdelivr.com/package/npm/@theatre/browser-bundles) (the core and studio bundle), the shared `SceneAnimator.js` from the player extension, and this extension's `main.js` on your page. The extension uses the Scene API, so it requires Viewer v8 (or v7 with the Scene API enabled).
+Include the shared `SceneAnimator.js` from the player extension and this extension's `main.js` on your page. The extension loads [Theatre.js](https://www.jsdelivr.com/package/npm/@theatre/browser-bundles) (the core and studio bundle) from a CDN when it's first loaded. It uses the Scene API, so it requires Viewer v8 (or v7 with the Scene API enabled).
 
 ```xml
-<script src="https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.7.2/dist/core-and-studio.js"></script>
 <script src="extensions/AnimationPlayer/contents/SceneAnimator.js"></script>
 <script src="extensions/AnimationEditor/contents/main.js"></script>
 ```
@@ -48,6 +47,8 @@ viewer.loadExtension('AnimationEditor', { projectId: 'My animation' /* optional 
 ```
 
 ## How it works
+
+Theatre.js refuses to load a second copy of its core on a page, so the two extensions share what's already loaded. When the editor is loaded first, the player uses the core from the editor's core and studio bundle. When the player is loaded first, the editor still loads the core and studio bundle, and lets it register its own core next to the player's; the player keeps using its own.
 
 Each animated element is a Theatre.js sheet object, with props for position, rotation, scale, visibility and color. Its key ends with the element's dbId in square brackets, which is how the player finds the element again. The downloaded file is a Theatre.js project state.
 
@@ -63,6 +64,5 @@ The Theatre.js studio normally covers the whole browser window. The extension fi
 
 ## Limitations
 
-- Theatre.js can only be loaded once per page. When using both extensions, enable Animation editor before Animation player: the player then uses the Theatre.js core of the editor. The other way round, the editor can't load until the page is reloaded.
 - The Theatre.js studio logs `ReferenceError: process is not defined` when it starts (from its update check in the browser bundle). It doesn't affect the extension.
 - In the Viewer v8 preview, moving the instances of some models (for example `xArm.f3d` in the sample bucket) makes the viewer stop rendering with `TypeError: e.makeEmpty is not a function`. This also happens with the `Node3D` scene graph, so it's not specific to this extension.

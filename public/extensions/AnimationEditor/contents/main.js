@@ -7,10 +7,8 @@
 // and can be exported to a JSON file for the AnimationPlayer extension.
 ///////////////////////////////////////////////////////////////////
 (function () {
-    // The core-and-studio bundle (see config.json). It can't be loaded when the player extension
-    // has already loaded the core-only bundle, as Theatre.js can only be loaded once per page.
-    const studio = SceneAnimator.theatreStudio();
-    const core = studio ? window.Theatre.core : null;
+    // Theatre.js core and studio, loaded with the first editor (see SceneAnimator.loadTheatreStudio)
+    let core = null, studio = null;
     const SHEET_NAME = 'Scene';
     let activeExtension = null; // the studio is a page-wide singleton, so its toolbar talks to the loaded extension
     let studioInitialized = false;
@@ -140,16 +138,12 @@
         }
 
         async load() {
-            if (!studio) {
-                console.error('[AnimationEditor] The animation editor is not available, as the Animation Player extension was loaded first. '
-                    + 'When using both extensions, reload the page and enable Animation Editor before Animation Player.');
-                return false;
-            }
             const model = this.viewer.model;
             if (!model) {
                 console.warn('[AnimationEditor] Load a model before loading this extension');
                 return false;
             }
+            ({ core, studio } = await SceneAnimator.loadTheatreStudio());
             this.model = model;
             this.animator = await new SceneAnimator(this.viewer, model).init();
             this.props = SceneAnimator.createProps(core.types, this.animator.modelSize());

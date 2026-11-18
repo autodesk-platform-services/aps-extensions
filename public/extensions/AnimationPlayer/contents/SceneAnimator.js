@@ -21,10 +21,17 @@
     const KEY_PATTERN = /\[(\d+)\]\s*$/;
     const DEG = Math.PI / 180;
 
-    // Theatre.js refuses to be loaded twice on a page. The editor extension loads core and studio together;
-    // the player only needs the core, so it reuses that one when it's there, and loads the core-only bundle otherwise.
-    const CORE_URL = 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.7.2/dist/core-only.min.js';
+    // Theatre.js refuses to load a second copy of its core on a page. The player only needs the core, the editor needs
+    // the core and the studio, so they share what's already there:
+    // - The player reuses the core of the editor's core-and-studio bundle when it's loaded, or loads the core-only bundle.
+    // - When the player's core-only bundle is already loaded, the editor still loads the core-and-studio bundle, which
+    //   brings its own core, and the studio attaches to that one. The player keeps using the core it has.
+    const BUNDLES_URL = 'https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.7.2/dist/';
+    const CORE_URL = BUNDLES_URL + 'core-only.min.js';
+    const STUDIO_URL = BUNDLES_URL + 'core-and-studio.js';
+    const CORE_MARKER = '__TheatreJS_CoreBundle'; // set by Theatre.js core when it's loaded, checked by the next one
     let corePromise = null;
+    let studioPromise = null;
 
     // Theatre.js studio from the core-and-studio bundle, or null. (The core-only bundle has a `studio` getter
     // that shows an alert, so don't just read the property.)
@@ -33,24 +40,47 @@
         return descriptor && 'value' in descriptor ? descriptor.value : null;
     }
 
+    function loadScript(url) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = url;
+            script.onload = resolve;
+            script.onerror = () => {
+                script.remove();
+                reject(new Error('Failed to load ' + url));
+            };
+            document.head.append(script);
+        });
+    }
+
     class SceneAnimator {
-        static theatreStudio() {
-            return theatreStudio();
+        // Resolves to the Theatre.js core, for playing animations
+        static loadTheatreCore() {
+            if (studioPromise) return studioPromise.then(theatre => theatre.core);
+            if (window.Theatre && window.Theatre.core) return Promise.resolve(window.Theatre.core);
+            corePromise = corePromise || loadScript(CORE_URL)
+                .then(() => window.Theatre.core)
+                .catch(err => { corePromise = null; throw err; });
+            return corePromise;
         }
 
-        static loadTheatreCore() {
-            if (window.Theatre && window.Theatre.core) return Promise.resolve(window.Theatre.core);
-            corePromise = corePromise || new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = CORE_URL;
-                script.onload = () => resolve(window.Theatre.core);
-                script.onerror = () => {
-                    corePromise = null;
-                    reject(new Error('Failed to load ' + CORE_URL));
-                };
-                document.head.append(script);
-            });
-            return corePromise;
+        // Resolves to { core, studio } from the core-and-studio bundle, for editing animations
+        static loadTheatreStudio() {
+            if (theatreStudio()) return Promise.resolve({ core: window.Theatre.core, studio: theatreStudio() });
+            studioPromise = studioPromise || (corePromise || Promise.resolve())
+                .catch(() => { /* no core-only bundle then */ })
+                .then(() => {
+                    // The core-only bundle of the player is there: let the new bundle register its own core
+                    if (window.Theatre && window.Theatre.core) delete window[CORE_MARKER];
+                    return loadScript(STUDIO_URL);
+                })
+                .then(() => {
+                    const studio = theatreStudio();
+                    if (!studio) throw new Error('Theatre.js studio did not load');
+                    return { core: window.Theatre.core, studio };
+                })
+                .catch(err => { studioPromise = null; throw err; });
+            return studioPromise;
         }
 
         constructor(viewer, model) {

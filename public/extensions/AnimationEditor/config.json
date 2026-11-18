@@ -6,7 +6,6 @@
     },
     "dependencies": [
         "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css",
-        "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.7.2/dist/core-and-studio.js",
         "../../AnimationPlayer/contents/SceneAnimator.js"
     ]
 }

@@ -22,7 +22,7 @@ The extension comes with a sample animation for `Office.rvt` ([samples/Office.js
 
 ## Setup
 
-Include `SceneAnimator.js` and this extension's files on your page. The extension loads the Theatre.js core from a CDN when it's first loaded, unless Theatre.js is already on the page. It uses the Scene API, so it requires Viewer v8 (or v7 with the Scene API enabled).
+Include `SceneAnimator.js` and this extension's files on your page. The extension loads the Theatre.js core from a CDN when it's first loaded, unless the editor extension has already loaded Theatre.js. The two extensions can be enabled in either order. It uses the Scene API, so it requires Viewer v8 (or v7 with the Scene API enabled).
 
 ```xml
 <link rel="stylesheet" href="extensions/AnimationPlayer/contents/main.css">
@@ -48,5 +48,4 @@ An animation file is a [Theatre.js project state](https://www.theatrejs.com/docs
 
 ## Limitations
 
-- Theatre.js can only be loaded once per page. If the editor extension is loaded first, the player uses its Theatre.js core. The editor can't be loaded after the player until the page is reloaded.
 - In the Viewer v8 preview, moving the instances of some models (for example `xArm.f3d` in the sample bucket) makes the viewer stop rendering with `TypeError: e.makeEmpty is not a function`.
