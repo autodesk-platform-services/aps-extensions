@@ -123,13 +123,20 @@
         }
 
         play() {
-            if (!this.sheet) return;
-            const sequence = this.sheet.sequence;
-            if (!this.options.loop && sequence.position >= this.length) sequence.position = 0;
-            sequence.play({ iterationCount: this.options.loop ? Infinity : 1 });
+            const sheet = this.sheet;
+            if (!sheet) return;
+            const request = {};
+            this._playRequest = request;
+            return sheet.project.ready.then(() => {
+                if (this.sheet !== sheet || this._playRequest !== request) return;
+                const sequence = sheet.sequence;
+                if (!this.options.loop && sequence.position >= this.length) sequence.position = 0;
+                return sequence.play({ iterationCount: this.options.loop ? Infinity : 1 });
+            });
         }
 
         pause() {
+            this._playRequest = null;
             if (this.sheet) this.sheet.sequence.pause();
         }
 
