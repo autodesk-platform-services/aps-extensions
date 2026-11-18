@@ -116,6 +116,36 @@
         };
     }
 
+    // Paths of the props (see SceneAnimator.createProps) that get keyframe tracks when an element is added
+    const SEQUENCED_PROPS = [
+        ['position', 'x'], ['position', 'y'], ['position', 'z'],
+        ['rotation', 'x'], ['rotation', 'y'], ['rotation', 'z'],
+        ['scale', 'x'], ['scale', 'y'], ['scale', 'z'],
+        ['visibility'], ['color']
+    ];
+
+    // Gives the props of a sheet object keyframe tracks, as "Sequence all" in a prop's context menu does, so that
+    // the sequence editor (the timeline) shows up and changing a value adds a keyframe at the playhead.
+    // The studio's public API can't do this, so this uses its internal state editors, and returns false if
+    // they're not there (e.g. in another version of Theatre.js).
+    function sequenceProps(object) {
+        const bundle = window.__TheatreJS_StudioBundle;
+        const privateStudio = bundle && bundle._studio;
+        if (!privateStudio || typeof privateStudio.transaction !== 'function') return false;
+        try {
+            privateStudio.transaction(({ stateEditors }) => {
+                const sequence = stateEditors.coreByProject.historic.sheetsById.sequence;
+                for (const pathToProp of SEQUENCED_PROPS) {
+                    sequence.setPrimitivePropAsSequenced({ ...object.address, pathToProp });
+                }
+            });
+            return true;
+        } catch (err) {
+            console.warn('[AnimationEditor] Could not add keyframe tracks', err);
+            return false;
+        }
+    }
+
     // Project ids in Theatre.js have 3 to 32 characters
     function projectIdFor(model) {
         const urn = model.getData().urn;
@@ -252,8 +282,18 @@
                 core.notify?.info?.('Nothing selected', 'Select elements in the viewer first, then add them to the animation.');
                 return;
             }
+            const added = dbIds.filter(dbId => !this.objects.has(dbId));
             const objects = dbIds.map(dbId => this._addObject(dbId)).filter(Boolean);
-            if (objects.length) studio.setSelection(objects);
+            if (objects.length === 0) return;
+            // New elements get keyframe tracks right away, so that the timeline shows up
+            const sequenced = added
+                .map(dbId => this.objects.get(dbId))
+                .filter(Boolean)
+                .every(({ object }) => sequenceProps(object));
+            if (!sequenced) {
+                core.notify?.info?.('Add keyframes', 'To animate a prop, right-click it and choose Sequence. The timeline then shows up at the bottom.');
+            }
+            studio.setSelection(objects);
         }
 
         removeSelection() {

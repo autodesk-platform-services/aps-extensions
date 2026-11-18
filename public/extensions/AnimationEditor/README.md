@@ -22,12 +22,12 @@ The editor is the studio of [Theatre.js](https://github.com/theatre-js/theatre),
    | `rotation` | Rotation in degrees around the center of the element's bounding box, applied in X, Y, Z order |
    | `scale` | Scale around the center of the element's bounding box |
 
-4. To animate a prop, right-click it and choose **Sequence**. Move the playhead in the sequence editor and change the value to add keyframes. See the [Theatre.js documentation](https://www.theatrejs.com/docs/latest/manual/sequences) for more details.
+4. New elements get a keyframe track for each prop, and the sequence editor (the timeline) opens at the bottom. Move the playhead and change a value to add a keyframe there. To keep a prop at the same value for the whole animation, right-click it and choose **Make static**. See the [Theatre.js documentation](https://www.theatrejs.com/docs/latest/manual/sequences) for more details.
 5. Click **Download the animation for the player extension** (the arrow) in the editor toolbar to save the animation as an `.animation.json` file.
 
 To stop animating elements, select them in the viewer and click **Stop animating the elements selected in the viewer** (the square with a minus sign). This also deletes their keyframes.
 
-The editor keeps your work in the browser's local storage, so it's still there when you reload the page. There's one animation project per model, named after the design file. Set the `projectId` option to use another name (3 to 32 characters).
+The editor keeps your work in the browser's local storage, so it's still there when you reload the page. There's one animation project per model, named after a hash of the model's URN. Set the `projectId` option to use another name (3 to 32 characters).
 
 Elements inside another animated element in the object tree (for example, a family instance inside an animated family type) follow that parent element, and can be animated on top of it.
 
@@ -57,6 +57,8 @@ When the values change, `SceneAnimator` (shared with the player) updates the ele
 - `setTransformWorld` sets each instance's transform from its original transform, the element's rotation and scale around its center, and its offset (combined with the transforms of animated parent elements).
 - `setVisibilityState` shows, ghosts or hides the instances.
 - `setThemingColor` sets the theming color of the instances' dbIds.
+
+Theatre.js has no public API to add keyframe tracks, so the editor uses the studio's internal state editors for that (the same ones as **Sequence all** in a prop's context menu). If they aren't available, the editor asks you to sequence the props yourself.
 
 The instance collection is switched to `UsageHint.Dynamic` while the extension is loaded. Unloading the extension puts all elements back as they were.
 
