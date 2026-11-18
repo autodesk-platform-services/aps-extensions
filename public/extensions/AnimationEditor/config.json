@@ -1,0 +1,12 @@
+{
+    "displayName": "Animation Editor",
+    "description": "Animate the position, rotation, scale, visibility and theming color of model elements on a timeline with keyframes, using the Scene API, and download the animation for the Animation Player extension.",
+    "options": {
+        "projectId": ""
+    },
+    "dependencies": [
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css",
+        "https://cdn.jsdelivr.net/npm/@theatre/browser-bundles@0.7.2/dist/core-and-studio.js",
+        "../../AnimationPlayer/contents/SceneAnimator.js"
+    ]
+}

@@ -1,0 +1,505 @@
+{
+  "sheetsById": {
+    "Scene": {
+      "staticOverrides": {
+        "byObject": {
+          "Mechanical Equipment [201]": {
+            "color": {
+              "r": 1,
+              "g": 0.45,
+              "b": 0,
+              "a": 0
+            }
+          },
+          "Furniture [175]": {
+            "color": {
+              "r": 0.1,
+              "g": 0.5,
+              "b": 1,
+              "a": 0
+            }
+          },
+          "Lighting Fixtures [223]": {
+            "color": {
+              "r": 1,
+              "g": 0.85,
+              "b": 0,
+              "a": 0
+            }
+          }
+        }
+      },
+      "sequence": {
+        "subUnitsPerUnit": 30,
+        "length": 6,
+        "type": "PositionalSequence",
+        "tracksByObject": {
+          "Roofs [183]": {
+            "trackData": {
+              "k000000001": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Roofs [183]:[\"position\",\"z\"]",
+                "keyframes": [
+                  {
+                    "id": "k000000002",
+                    "position": 0,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "k000000003",
+                    "position": 1.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 25
+                  },
+                  {
+                    "id": "k000000004",
+                    "position": 4.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 25
+                  },
+                  {
+                    "id": "k000000005",
+                    "position": 6,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"position\",\"z\"]": "k000000001"
+            }
+          },
+          "Walls [165]": {
+            "trackData": {
+              "k000000006": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Walls [165]:[\"visibility\"]",
+                "keyframes": [
+                  {
+                    "id": "k000000007",
+                    "position": 0,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": "visible"
+                  },
+                  {
+                    "id": "k000000008",
+                    "position": 1.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": "ghosted"
+                  },
+                  {
+                    "id": "k000000009",
+                    "position": 4.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": "visible"
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"visibility\"]": "k000000006"
+            }
+          },
+          "Windows [166]": {
+            "trackData": {
+              "k00000000a": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Windows [166]:[\"visibility\"]",
+                "keyframes": [
+                  {
+                    "id": "k00000000b",
+                    "position": 0,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": "visible"
+                  },
+                  {
+                    "id": "k00000000c",
+                    "position": 1.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": "ghosted"
+                  },
+                  {
+                    "id": "k00000000d",
+                    "position": 4.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": "visible"
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"visibility\"]": "k00000000a"
+            }
+          },
+          "Mechanical Equipment [201]": {
+            "trackData": {
+              "k00000000e": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Mechanical Equipment [201]:[\"color\",\"a\"]",
+                "keyframes": [
+                  {
+                    "id": "k00000000f",
+                    "position": 1.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "k00000000g",
+                    "position": 2.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0.9
+                  },
+                  {
+                    "id": "k00000000h",
+                    "position": 4,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0.9
+                  },
+                  {
+                    "id": "k00000000i",
+                    "position": 4.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"color\",\"a\"]": "k00000000e"
+            }
+          },
+          "Furniture [175]": {
+            "trackData": {
+              "k00000000j": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Furniture [175]:[\"position\",\"z\"]",
+                "keyframes": [
+                  {
+                    "id": "k00000000k",
+                    "position": 2,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "k00000000l",
+                    "position": 3,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 6
+                  },
+                  {
+                    "id": "k00000000m",
+                    "position": 4,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  }
+                ]
+              },
+              "k00000000n": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Furniture [175]:[\"color\",\"a\"]",
+                "keyframes": [
+                  {
+                    "id": "k00000000o",
+                    "position": 2,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "k00000000p",
+                    "position": 3,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0.8
+                  },
+                  {
+                    "id": "k00000000q",
+                    "position": 4,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"position\",\"z\"]": "k00000000j",
+              "[\"color\",\"a\"]": "k00000000n"
+            }
+          },
+          "Stairs [176]": {
+            "trackData": {
+              "k00000000r": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Stairs [176]:[\"rotation\",\"z\"]",
+                "keyframes": [
+                  {
+                    "id": "k00000000s",
+                    "position": 2,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "k00000000t",
+                    "position": 3,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 90
+                  },
+                  {
+                    "id": "k00000000u",
+                    "position": 4,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"rotation\",\"z\"]": "k00000000r"
+            }
+          },
+          "Lighting Fixtures [223]": {
+            "trackData": {
+              "k00000000v": {
+                "type": "BasicKeyframedTrack",
+                "__debugName": "Lighting Fixtures [223]:[\"color\",\"a\"]",
+                "keyframes": [
+                  {
+                    "id": "k00000000w",
+                    "position": 2,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "k00000000x",
+                    "position": 2.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 1
+                  },
+                  {
+                    "id": "k00000000y",
+                    "position": 3,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  },
+                  {
+                    "id": "k00000000z",
+                    "position": 3.5,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 1
+                  },
+                  {
+                    "id": "k000000010",
+                    "position": 4,
+                    "connectedRight": true,
+                    "handles": [
+                      0.5,
+                      1,
+                      0.5,
+                      0
+                    ],
+                    "type": "bezier",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "trackIdByPropPath": {
+              "[\"color\",\"a\"]": "k00000000v"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitionVersion": "0.4.0",
+  "revisionHistory": []
+}
