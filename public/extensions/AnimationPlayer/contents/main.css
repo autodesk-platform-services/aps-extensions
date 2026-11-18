@@ -1,0 +1,107 @@
+/* Player bar shown at the top of the viewer */
+.animation-player {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: min(520px, calc(100% - 24px));
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font: 13px/1.4 sans-serif;
+    box-sizing: border-box;
+}
+
+.animation-player[hidden] {
+    display: none;
+}
+
+.animation-player-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.animation-player button {
+    flex: none;
+    border: none;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.15);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.animation-player button:hover,
+.animation-player button:focus-visible {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.animation-player button:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Play/pause button, drawn with CSS: a triangle, or two bars while playing */
+.animation-player-play {
+    position: relative;
+    width: 28px;
+    height: 28px;
+}
+
+.animation-player-play::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    border-style: solid;
+    border-width: 6px 0 6px 10px;
+    border-color: transparent transparent transparent currentColor;
+}
+
+.animation-player-play.playing::before {
+    left: 9px;
+    width: 3px;
+    height: 12px;
+    border: none;
+    background: currentColor;
+    box-shadow: 7px 0 currentColor;
+}
+
+.animation-player-seek {
+    flex: 1;
+    min-width: 0;
+    accent-color: #3fa9f5;
+}
+
+.animation-player-time {
+    flex: none;
+    min-width: 4.5em;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.animation-player-open {
+    padding: 4px 8px;
+}
+
+.animation-player:not(.has-animation) .animation-player-play,
+.animation-player:not(.has-animation) .animation-player-seek {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.animation-player-status {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.animation-player-status.error {
+    color: #ffb4a8;
+    opacity: 1;
+}
