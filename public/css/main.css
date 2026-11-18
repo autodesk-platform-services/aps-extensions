@@ -48,6 +48,15 @@ button { font: inherit; cursor: pointer; }
   border-bottom: 1px solid var(--border);
 }
 .brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; font-weight: 600; }
+.edge-tabs { flex: 0 0 auto; display: flex; flex-direction: column; justify-content: flex-start; }
+.panel-toggle {
+  padding: 12px 6px; border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); color: var(--muted);
+  writing-mode: vertical-rl; letter-spacing: .04em;
+}
+.edge-tabs:first-child .panel-toggle { transform: rotate(180deg); }
+.panel-toggle:hover { background: var(--bg); color: var(--text); }
+.panel-toggle[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
 .header-link { font-weight: 500; text-decoration: none; }
 .header-link:hover { text-decoration: underline; }
 
@@ -55,11 +64,16 @@ button { font: inherit; cursor: pointer; }
 .app-layout {
   flex: 1 1 0;
   min-height: 0;
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr) 300px;
+  display: flex;
   gap: 12px;
   padding: 12px;
 }
+
+/* Visible side panels sit beside the viewer, which takes the remaining width */
+.side-panel { flex: 0 0 auto; }
+.side-panel[hidden] { display: none; }
+.models-panel { width: 260px; }
+.extensions-panel { width: 300px; }
 
 .panel {
   display: flex; flex-direction: column; min-height: 0;
@@ -94,7 +108,7 @@ button { font: inherit; cursor: pointer; }
 
 /* Viewer */
 .viewer-pane {
-  position: relative; min-height: 0;
+  position: relative; flex: 1 1 0; min-width: 0; min-height: 0;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -145,7 +159,9 @@ dialog h2 { margin-bottom: 12px; }
 /* Narrow screens: stack the panels */
 @media (max-width: 900px) {
   body { height: auto; min-height: 100%; }
-  .app-layout { display: flex; flex-direction: column; }
-  .panel { max-height: 40vh; }
-  .viewer-pane { height: 70vh; flex: none; }
+  .app-layout { flex-direction: column; }
+  .edge-tabs { flex-direction: row; }
+  .panel-toggle, .edge-tabs:first-child .panel-toggle { writing-mode: horizontal-tb; transform: none; padding: 6px 12px; }
+  .models-panel, .extensions-panel { width: auto; max-height: 40vh; }
+  .viewer-pane { flex: none; height: 70vh; }
 }

@@ -1,4 +1,21 @@
-document.addEventListener('DOMContentLoaded', loadModels);
+document.addEventListener('DOMContentLoaded', () => {
+  loadModels();
+  initPanelToggles();
+});
+
+// Header buttons show/hide the side panels beside the viewer.
+function initPanelToggles() {
+  const toggles = document.querySelectorAll('.panel-toggle');
+  const setOpen = (toggle, open) => {
+    document.getElementById(toggle.dataset.panel).hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    window.dispatchEvent(new Event('resize')); // let the viewer fit its new width
+  };
+  toggles.forEach(toggle => toggle.addEventListener('click', () => setOpen(toggle, toggle.getAttribute('aria-expanded') !== 'true')));
+  document.addEventListener('keydown', ev => {
+    if (ev.key === 'Escape') toggles.forEach(toggle => setOpen(toggle, false));
+  });
+}
 
 function setText(id, text, isError) {
   const el = document.getElementById(id);
@@ -42,5 +59,7 @@ function selectModel(button, model) {
   document.querySelector('#appModels button[aria-current]')?.removeAttribute('aria-current');
   button.setAttribute('aria-current', 'true');
   setText('viewerMessage', '');
+  const modelsToggle = document.querySelector('.panel-toggle[data-panel="modelsPanel"]');
+  if (modelsToggle.getAttribute('aria-expanded') === 'true') modelsToggle.click(); // hide the list to reveal the viewer
   launchViewer(model.urn, model.name);
 }
