@@ -120,11 +120,13 @@
 
     // Project ids in Theatre.js have 3 to 32 characters
     function projectIdFor(model) {
-        let name = 'Animation';
-        try {
-            name = model.getDocumentNode().getRootNode().children[0].name() || name;
-        } catch (err) { /* not loaded from a document */ }
-        return name.trim().slice(0, 32).padEnd(3, '_');
+        const urn = model.getData().urn;
+        let hash = 0xcbf29ce484222325n;
+        for (let i = 0; i < urn.length; i++) {
+            hash ^= BigInt(urn.charCodeAt(i));
+            hash = BigInt.asUintN(64, hash * 0x100000001b3n);
+        }
+        return hash.toString(16).padStart(16, '0');
     }
 
     class AnimationEditor extends Autodesk.Viewing.Extension {
