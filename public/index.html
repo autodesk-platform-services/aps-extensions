@@ -27,7 +27,11 @@
   </header>
 
   <div class="app-layout">
-    <aside class="panel models-panel" aria-labelledby="models-heading">
+    <div class="edge-tabs">
+      <button type="button" class="panel-toggle" data-panel="modelsPanel" aria-controls="modelsPanel" aria-expanded="false">Models</button>
+    </div>
+
+    <aside id="modelsPanel" class="panel side-panel models-panel" hidden aria-labelledby="models-heading">
       <div class="panel-heading">
         <h2 id="models-heading">Sample models</h2>
       </div>
@@ -37,12 +41,12 @@
 
     <main class="viewer-pane">
       <p id="viewerMessage" class="viewer-message" role="status">
-        &larr; Select a model to load the viewer and extensions
+        Open <strong>Models</strong> on the left to select a model and load the viewer
       </p>
       <div id="apsViewer"></div>
     </main>
 
-    <aside class="panel extensions-panel" aria-labelledby="extensions-heading">
+    <aside id="extensionsPanel" class="panel side-panel extensions-panel" hidden aria-labelledby="extensions-heading">
       <div class="panel-heading">
         <h2 id="extensions-heading">Extensions</h2>
       </div>
@@ -55,6 +59,10 @@
         <div id="inbuiltextensionlist" class="tab-panel"></div>
       </div>
     </aside>
+
+    <div class="edge-tabs">
+      <button type="button" class="panel-toggle" data-panel="extensionsPanel" aria-controls="extensionsPanel" aria-expanded="false">Extensions</button>
+    </div>
   </div>
 
   <dialog id="editConfigModal" aria-labelledby="editConfigTitle">
