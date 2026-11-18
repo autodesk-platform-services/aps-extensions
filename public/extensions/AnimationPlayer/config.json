@@ -1,8 +1,8 @@
 {
     "displayName": "Animation Player",
-    "description": "Plays animations made with the Animation Editor extension on the model, using the Scene API. Comes with a sample animation for Office.rvt; open or drop your own animation file on the viewer, or set its URL in the options.",
+    "description": "Plays animations made with the Animation Editor extension on the model, using the Scene API. Comes with sample animations for Office.rvt and rac-basic-sampleproject.rvt; open or drop your own animation file on the viewer, or set its URL in the options.",
     "options": {
-        "animationUrl": "extensions/AnimationPlayer/samples/Office.json",
+        "animationUrl": "auto",
         "autoplay": true,
         "loop": true
     },

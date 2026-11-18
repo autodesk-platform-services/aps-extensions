@@ -11,6 +11,11 @@
     // as the studio (when the editor extension is loaded too) keeps the projects it has seen in local storage.
     const PAGE_ID = Date.now().toString(36);
     let projectCount = 0;
+    // Sample animations, by the file name of the model they were made for (used when `animationUrl` is 'auto')
+    const SAMPLES = {
+        'office.rvt': 'extensions/AnimationPlayer/samples/Office.json',
+        'rac-basic-sampleproject.rvt': 'extensions/AnimationPlayer/samples/RacBasicSampleProject.json'
+    };
 
     class AnimationPlayer extends Autodesk.Viewing.Extension {
         constructor(viewer, options) {
@@ -37,8 +42,9 @@
             this._createPanel();
             this.viewer.container.addEventListener('dragover', this._onDragOver);
             this.viewer.container.addEventListener('drop', this._onDrop);
-            if (this.options.animationUrl) {
-                this.loadFromUrl(this.options.animationUrl).catch(err => this._setStatus(err.message, true));
+            const animationUrl = this.options.animationUrl === 'auto' ? this._sampleUrl() : this.options.animationUrl;
+            if (animationUrl) {
+                this.loadFromUrl(animationUrl).catch(err => this._setStatus(err.message, true));
             }
             console.log('AnimationPlayer loaded');
             return true;
@@ -79,6 +85,14 @@
         }
 
         // Public API
+
+        // The sample animation made for the loaded model, if there is one
+        _sampleUrl() {
+            const node = this.model.getDocumentNode && this.model.getDocumentNode();
+            const root = node && node.getRootNode && node.getRootNode();
+            const name = root && root.children && root.children[0] && root.children[0].data && root.children[0].data.name;
+            return (name && SAMPLES[String(name).toLowerCase()]) || '';
+        }
 
         async loadFromUrl(url) {
             this._setStatus('Loading…');

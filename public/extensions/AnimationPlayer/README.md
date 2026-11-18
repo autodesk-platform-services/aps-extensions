@@ -12,11 +12,13 @@ Enable the extension. A player bar appears at the top of the viewer, with play/p
 
 The extension comes with a sample animation for `Office.rvt` ([samples/Office.json](samples/Office.json)), which plays when you enable the extension on that model. Animated elements that aren't in the loaded model are skipped, and the player bar says how many there were.
 
+There's a second sample, [samples/RacBasicSampleProject.json](samples/RacBasicSampleProject.json), for `rac-basic-sampleproject.rvt`. It assembles the house floor by floor over about 19 seconds: the foundation, then level 1, level 2 and the roof. Each level builds up in the same order: floors, walls, windows and doors, stairs, railings and ceilings, then fixtures, furniture and the rest. The terrain, site and pads stay in place the whole time. Every element is animated on its own (about 430), assigned to a level from its `Level` property. It plays when you enable the extension on that model.
+
 ## Options
 
 | Option | Default | Description |
 | --- | --- | --- |
-| `animationUrl` | the `Office.rvt` sample | URL of an animation file to load when the extension is loaded. Empty for none |
+| `animationUrl` | `auto` | URL of an animation file to load when the extension is loaded. `auto` loads the sample made for the loaded model, if there is one. Empty for none |
 | `autoplay` | `true` | Start playing as soon as an animation is loaded |
 | `loop` | `true` | Play the animation in a loop |
 
