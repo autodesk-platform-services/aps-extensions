@@ -8,7 +8,7 @@ function initViewerRuntime() {
     if (!window.isSecureContext) {
       throw new Error('The viewer requires HTTPS (or http://localhost).');
     }
-    await new Promise(resolve => Autodesk.Viewing.Initializer({ env: 'AutodeskProduction2', api: 'streamingV2', getAccessToken: getApsToken }, resolve));
+    await Autodesk.Viewing.Initializer({ env: 'AutodeskProduction2', api: 'streamingV2', getAccessToken: getApsToken });
   })();
   viewerRuntime.catch(() => { viewerRuntime = null; });
   return viewerRuntime;

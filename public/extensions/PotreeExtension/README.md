@@ -24,12 +24,11 @@ Apart from the library itself (available as either _potree.js_, _potree.min.js_,
 - include `PotreeExtension` when initializing the viewer, for example:
 
 ```js
-Autodesk.Viewing.Initializer(options, () => {
-    const config = {
-        extensions: ['PotreeExtension']
-    };
-    viewer = new Autodesk.Viewing.GuiViewer3D(container, config);
-});
+await Autodesk.Viewing.Initializer(options);
+const config = {
+    extensions: ['PotreeExtension']
+};
+viewer = new Autodesk.Viewing.GuiViewer3D(container, config);
 ```
 
 - in your JavaScript code, use the extension's `loadPointCloud` method, for example:
